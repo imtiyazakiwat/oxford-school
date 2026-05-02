@@ -278,7 +278,7 @@ export default function Contact() {
               <div className="h-[200px] sm:h-[250px] md:h-[300px] rounded-lg overflow-hidden shadow-sm">
                 {activeMap === "jamkhandi" ? (
                   <iframe
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3821.5!2d75.5596!3d16.5026!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bc3a2c0e2b8b64d%3A0x0!2sNew+Oxford+Coaching+Classes+Jamkhandi!5e0!3m2!1sen!2sin"
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3825.3010184042882!2d75.3059597!3d16.510894!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bc73dead6c1df95%3A0xa83dc27a384ce231!2sNew%20Oxford%20Coaching%20Class%20Jamakhandi!5e0!3m2!1sen!2sin!4v1777731595170!5m2!1sen!2sin"
                     width="100%"
                     height="100%"
                     style={{ border: 0 }}
@@ -289,7 +289,7 @@ export default function Contact() {
                   />
                 ) : (
                   <iframe
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3831.5!2d75.0596!3d16.7246!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bc3a2c0e2b8b64d%3A0x0!2sNew+Oxford+Coaching+Classes+Athani!5e0!3m2!1sen!2sin"
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1910.5018595224244!2d75.04788937768937!3d16.72666625449889!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bc72b000a459e99%3A0x7738f08210c5efc5!2sNew%20Oxford%20Coaching%20Classes%20Athani!5e0!3m2!1sen!2sin!4v1777731550944!5m2!1sen!2sin"
                     width="100%"
                     height="100%"
                     style={{ border: 0 }}
