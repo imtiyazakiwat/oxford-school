@@ -70,14 +70,14 @@ export function proxy(request: NextRequest) {
     // Default: only allow same-origin
     "default-src 'self'",
 
-    // Scripts: Allow Vercel, unsafe-inline/eval for production stability
-    "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://vercel.live https://vercel.com https://frontend-cdn.perplexity.ai",
+    // Scripts: Allow Vercel, Google APIs, unsafe-inline/eval for production stability
+    "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://vercel.live https://vercel.com https://frontend-cdn.perplexity.ai https://apis.google.com",
 
     // Styles: Allow Google Fonts and Perplexity
     "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://frontend-cdn.perplexity.ai",
 
-    // Images: Allow Firebase, Unsplash, Vercel
-    "img-src 'self' blob: data: https://*.firebasestorage.app https://firebasestorage.googleapis.com https://images.unsplash.com https://vercel.live https://vercel.com",
+    // Images: Allow Firebase, Unsplash, Vercel, QR Code Generator
+    "img-src 'self' blob: data: https://*.firebasestorage.app https://firebasestorage.googleapis.com https://images.unsplash.com https://vercel.live https://vercel.com https://api.qrserver.com",
 
     // Fonts: Allow Google Fonts and Perplexity
     "font-src 'self' data: https://fonts.gstatic.com https://frontend-cdn.perplexity.ai",
