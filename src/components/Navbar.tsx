@@ -179,7 +179,7 @@ export default function Navbar({ onLoginSuccess }: NavbarProps) {
                     )}
                   </AnimatePresence>
                 </div>
-              )}
+              ) : null}
             </div>
 
 

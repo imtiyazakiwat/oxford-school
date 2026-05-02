@@ -108,7 +108,7 @@ export default function Achievers() {
                   <div className="relative w-32 h-32 sm:w-40 sm:h-40 mx-auto">
                     {achiever.image_path ? (
                       <img
-                        src={getAchieverImageUrl(achiever.image_path)}
+                        src={getAchieverImageUrl(achiever.image_path, achiever.id)!}
                         alt={achiever.name}
                         className="w-full h-full object-cover rounded-full border-4 border-white shadow-lg"
                       />

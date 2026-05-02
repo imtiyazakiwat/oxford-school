@@ -25,7 +25,7 @@ export default function Gallery() {
         id: img.id,
         title: img.title,
         category: img.category,
-        url: img.image_path ? getGalleryImageUrl(img.image_path) : getMockGalleryImage(img.id),
+        url: getGalleryImageUrl(img.image_path, img.id)!,
       })));
       setLoading(false);
     };

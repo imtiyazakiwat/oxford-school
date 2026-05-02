@@ -35,7 +35,7 @@ export default function GalleryPage() {
       const { data } = await getAllGalleryImages();
       setImages(data.map(img => ({
         id: img.id,
-        url: img.image_path ? getGalleryImageUrl(img.image_path) : getMockGalleryImage(img.id),
+        url: getGalleryImageUrl(img.image_path, img.id)!,
         title: img.title,
         category: img.category,
       })));
