@@ -22,14 +22,14 @@ const contactInfo = [
     details: ["HUDKO Colony, IB Road", "Athani - 591304"],
   },
   {
-    icon: Clock,
-    title: "Office Hours",
-    details: ["Mon - Sat: 9:00 AM - 6:00 PM", "Sunday: Closed"],
-  },
-  {
     icon: Mail,
     title: "Email",
     details: ["noccj2023@gmail.com"],
+  },
+  {
+    icon: Clock,
+    title: "Office Hours",
+    details: ["Mon - Sat: 9:00 AM - 6:00 PM", "Sunday: Closed"],
   },
 ];
 

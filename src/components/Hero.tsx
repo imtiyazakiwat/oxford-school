@@ -14,7 +14,7 @@ export default function Hero({ onExamRegisterClick }: HeroProps) {
       <div
         className="absolute inset-0 bg-cover bg-center"
         style={{
-          backgroundImage: "url('/img/admissions/admission4.jpeg')",
+          backgroundImage: "url('/img/hero-bg.jpeg')",
         }}
       >
         <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-black/30" />

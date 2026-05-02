@@ -12,7 +12,7 @@ function generateNonce(): string {
   return Buffer.from(array).toString("base64");
 }
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const response = NextResponse.next();
   const nonce = generateNonce();
 
@@ -71,19 +71,19 @@ export function middleware(request: NextRequest) {
     "default-src 'self'",
 
     // Scripts: Allow Vercel, unsafe-inline/eval for production stability
-    "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://vercel.live https://vercel.com",
+    "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://vercel.live https://vercel.com https://frontend-cdn.perplexity.ai",
 
-    // Styles: Allow Google Fonts
-    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+    // Styles: Allow Google Fonts and Perplexity
+    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://frontend-cdn.perplexity.ai",
 
     // Images: Allow Firebase, Unsplash, Vercel
     "img-src 'self' blob: data: https://*.firebasestorage.app https://firebasestorage.googleapis.com https://images.unsplash.com https://vercel.live https://vercel.com",
 
-    // Fonts: Allow Google Fonts
-    "font-src 'self' data: https://fonts.gstatic.com",
+    // Fonts: Allow Google Fonts and Perplexity
+    "font-src 'self' data: https://fonts.gstatic.com https://frontend-cdn.perplexity.ai",
 
     // API connections: Allow Firebase, Vercel Analytics/Toolbar
-    "connect-src 'self' https://*.firebaseio.com https://*.googleapis.com wss://*.firebaseio.com https://vercel.live https://vercel.com https://vitals.vercel-insights.com",
+    "connect-src 'self' https://*.firebaseio.com https://*.googleapis.com wss://*.firebaseio.com https://vercel.live https://vercel.com https://vitals.vercel-insights.com https://frontend-cdn.perplexity.ai",
 
     // Frames: YouTube, Google, Vercel
     "frame-src 'self' https://www.youtube.com https://www.google.com https://vercel.live https://vercel.com",

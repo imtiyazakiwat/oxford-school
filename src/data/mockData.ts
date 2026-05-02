@@ -311,42 +311,29 @@ export const MOCK_NEWS: NewsItem[] = [
     created_by: null,
   },
   {
-    id: "news-smartwatch-savadi-2026",
-    title: "MLA Laxman Savadi Honors Achievers with Smartwatches",
-    description: "Athani MLA Laxman Savadi distributed smartwatches to students selected for Navodaya, praising the institution's commitment to quality education in rural areas.",
-    content: "ಅಥಣಿ: ಗ್ರಾಮೀಣ ಭಾಗದ ವಿದ್ಯಾರ್ಥಿಗಳು ಇಂದು ಸ್ಪರ್ಧಾತ್ಮಕ ಯುಗದಲ್ಲಿ ರಾಷ್ಟ್ರ ಮಟ್ಟದ ಶಾಲೆಗಳಿಗೆ ಆಯ್ಕೆಯಾಗುತ್ತಿರುವುದು ಹೆಮ್ಮೆಯ ವಿಷಯ ಎಂದು ಅಥಣಿ ಶಾಸಕ ಲಕ್ಷö್ಮಣ ಸವದಿ ಹೇಳಿದರು. ತಾಲೂಕಿನ ತೆಲಸಂಗ ಗ್ರಾಮದ ಸಂಸ್ಕೃತಿ ಸೇವಾ ಫೌಂಡೇಶನ್ನ ಇದರ ನ್ಯೂ ಆಕ್ಸ್ಫರ್ಡ್ ಕೋಚಿಂಗ್ ಕ್ಲಾಸ್ನಲ್ಲಿ ತರಬೇತಿ ಪಡೆದ ಆರು ವಿದ್ಯಾರ್ಥಿಗಳು ಜವಾಹರ ನವೋದಯ ವಿದ್ಯಾಲಯಕ್ಕೆ ಆಯ್ಕೆಯಾದ ಈ ಸಾಧಕ ವಿದ್ಯಾರ್ಥಿಗಳಿಗೆ ಸ್ಮಾರ್ಟ್ ವಾಚ್ ನೀಡಿ ಗೌರವಿಸಿ, ಶುಭ ಹಾರೈಸಿ ಅವರು ಮಾತನಾಡಿದರು.",
-    image_path: null,
-    category: "Events",
-    is_featured: true,
-    is_active: true,
-    published_at: "2026-05-02T13:00:00.000Z",
-    created_at: "2026-05-02T13:00:00.000Z",
-    created_by: null,
-  },
-  {
-    id: "news-navodaya-felicitation-hiremath",
-    title: "Felicitation Ceremony at Telsang Hiremath for Navodaya Achievers",
-    description: "A grand felicitation ceremony was held at Telsang Hiremath to celebrate the success of students selected for various residential schools. Sri Veereshwara Devaru highlighted the importance of dedication.",
-    content: "ತೆಲಸಂಗ: ಶಿಕ್ಷಕರ ಕರ್ತವ್ಯ ನಿಷ್ಠೆ ಹಾಗೂ ಮಕ್ಕಳ ಪ್ರತಿಭೆ ಎರಡರಲ್ಲಿ ಒಂದು ಕೊರತೆಯಾದರೂ ಉತ್ತಮ ಫಲಿತಾಂಶ ನಿರೀಕ್ಷಿಸಲು ಸಾಧ್ಯವಿಲ್ಲ ಸೇವೆ ಮತ್ತು ಸಂಸ್ಕಾರ ಎಲ್ಲಿರುತ್ತದೆಯೋ ಅಲ್ಲಿ ಯಶಸ್ಸು ಕಟ್ಟಿಟ್ಟ ಬುತ್ತಿ ಎಂದು ಹಿರೇಮಠದ ವೀರೇಶ್ವರದೇವರು ಹೇಳಿದರು. ಗ್ರಾಮದ ಹಿರೇಮಠದಲ್ಲಿ ಶ್ರೀಮಠದಿಂದ ಹಾಗೂ ಸೇವಾ ಸಂಸ್ಕೃತಿ ಪೌಂಡೇಶನ್ ವತಿಯಿಂದ ಹಮ್ಮಿಕೊಂಡ ನ್ಯೂ ಆಕ್ಸ್ಫರ್ಡ್‌ನಿಂದ ತರಬೇತಿ ಪಡೆದು ನವೋದಯ ಶಾಲೆಗೆ ಆಯ್ಕೆಯಾದ ವಿದ್ಯಾರ್ಥಿಗಳ ಸನ್ಮಾನ ಸಮಾರಂಭದಲ್ಲಿ ಅವರು ಮಾತನಾಡಿದರು.",
-    image_path: null,
+    id: "news-mla-felicitation-2026",
+    title: "MLA Laxman Savadi Honors Navodaya Selected Students",
+    description: "Athani MLA Laxman Savadi distributed smartwatches to students selected for Navodaya from New Oxford Coaching Classes.",
+    content: "During a grand ceremony at Telsang, Athani MLA Laxman Savadi honored six students who secured admission to Jawahar Navodaya Vidyalaya. He emphasized that education is the foundation for life and praised the institution's commitment to excellence. The students honored include Basavaraj Valasang, Amara Bhabhanagar, Nagesh Savalagi, Bhagyashri Sindagi, Vishala Mujagoni, and Vikas Shinge. The event was attended by various community leaders and parents.",
+    image_path: "/img/newspaper/news1.jpeg",
     category: "Achievements",
     is_featured: true,
     is_active: true,
-    published_at: "2026-05-01T10:00:00.000Z",
-    created_at: "2026-05-01T10:00:00.000Z",
+    published_at: "2026-05-02T00:00:00.000Z",
+    created_at: "2026-05-02T00:00:00.000Z",
     created_by: null,
   },
   {
-    id: "news-sainik-results-detailed-2026",
-    title: "94% Success Rate in Sainik School Entrance Exam — Detailed Results",
-    description: "64 out of 68 students qualified in the All India Sainik School entrance exam. Top scorers include Basavaraj Valasang (258), Nitish Benakatti (255), and more.",
-    content: "ಇತ್ತೀಚೆಗೆ ನಡೆದ ಅಖಿಲ ಭಾರತ ಸೈನಿಕ ಶಾಲಾ ಪ್ರವೇಶ ಪರೀಕ್ಷೆಯಲ್ಲಿ ಸಂಸ್ಥೆಯ ಒಟ್ಟು ೬೮ ವಿದ್ಯಾರ್ಥಿಗಳು ಪಾಲ್ಗೊಂಡಿದ್ದು, ಅದರಲ್ಲಿ ೬೪ ವಿದ್ಯಾರ್ಥಿಗಳು ಅರ್ಹತೆ ಪಡೆಯುವ ಮೂಲಕ ಶೇ. ೯೪ ರಷ್ಟು ಫಲಿತಾಂಶ ದಾಖಲಿಸಿದ್ದಾರೆ. ಗಮನಾರ್ಹ ಅಂಕ ಪಡೆದವರು: ಬಸವರಾಜ ವಳಸಂಗ(೨೫೮), ನಿತೀಶ ಬೆನಕಟ್ಟಿ(೨೫೫), ಅಮರ ಬಾಬಾನಗರ(೨೫೧), ಓಂ ಸಾಯಿ ಲಾಡ್(೨೫೧), ನಾಗೇಶ ಸಾವಳಗಿ(೨೪೩), ಸಿರೀಶ ಕಾಖಂಡಕಿ(೨೪೨), ಭಾಗ್ಯಶ್ರೀ ಸಿಂದಗಿ(೨೪೧), ಅನುಶ್ರೀ ಬಿಳ್ಳೂರು(೨೩೦) ಬಾಲಕೃಷ್ಣ ಸುತಾರ(೨೩೦), ಸಂಗಮೇಶ ವಾಂಗಿ(೨೨೬), ಸಮೃದ್ಧ ಗಣಿ(೨೧೬), ವಿಶಾಲ ಮುಜಗೋಣಿ(೨೧೦), ನವೀನ ಮಾಣಿಕಶೆಟ್ಟಿ(೨೦೬), ಪ್ರತಿಕ್ಷಾ ಸಾವಂತ(೨೦೪), ಅಮೃತಾ ಮುಜಗಣ್ಣವರ(೨೦೨).",
-    image_path: null,
+    id: "news-detailed-results-2026",
+    title: "Record-Breaking Results: 6 Navodaya, 3 Kittur, and 64 Sainik School Selections",
+    description: "New Oxford Coaching Classes records its best results yet with 94% qualification in Sainik School entrance and multiple selections in Navodaya and Kittur schools.",
+    content: "The 2026-27 entrance results for various residential schools are out. Our students have achieved remarkable success: 6 selections for Navodaya (Basavaraj Valasang - 6th rank in district, and others), 3 for Kittur Rani Chennamma (Poorvi Benade, Anushri Billur, Pratiksha Savant), and an astounding 64 out of 68 students qualified for Sainik School. Top scorers like Basavaraj Valasang (258), Nitheesh Benakatti (255), and Amara Bhabhanagar (251) have brought pride to the institution.",
+    image_path: "/img/congactulations/WhatsApp Image 2026-04-22 at 17.09.37.jpeg",
     category: "Achievements",
-    is_featured: false,
+    is_featured: true,
     is_active: true,
-    published_at: "2026-04-30T09:00:00.000Z",
-    created_at: "2026-04-30T09:00:00.000Z",
+    published_at: "2026-05-02T00:00:00.000Z",
+    created_at: "2026-05-02T00:00:00.000Z",
     created_by: null,
   },
 ];
@@ -359,9 +346,6 @@ export const MOCK_NEWS_IMAGES: Record<string, string> = {
   "news-felicitation-ceremony": "/img/newspaper/news1.jpeg",                  // Udayavani felicitation coverage
   "news-sharana-sanskriti-utsav": "/img/newspaper/news7.jpeg",                // Udayavani cultural event coverage
   "news-admissions-2026-27": "/img/admissions/admission3.jpeg",               // 2026-27 admissions poster
-  "news-smartwatch-savadi-2026": "/img/congactulations/congracts6.jpeg",
-  "news-navodaya-felicitation-hiremath": "/img/congactulations/congracts5.jpeg",
-  "news-sainik-results-detailed-2026": "/img/congactulations/WhatsApp Image 2026-04-22 at 17.09.37.jpeg",
 };
 
 // Default fallback news image
@@ -473,32 +457,6 @@ export const MOCK_ACHIEVERS: Achiever[] = [
     created_at: new Date().toISOString(),
     created_by: null,
   },
-  {
-    id: "ach-anushri",
-    name: "Anushri Billur",
-    stream: "Kittur Vasati Shale",
-    year: 2026,
-    percentage: "230 marks",
-    rank: "Kittur Selected",
-    image_path: "",
-    is_featured: false,
-    display_order: 9,
-    created_at: new Date().toISOString(),
-    created_by: null,
-  },
-  {
-    id: "ach-pratiksha",
-    name: "Pratiksha Savant",
-    stream: "Kittur Vasati Shale",
-    year: 2026,
-    percentage: "204 marks",
-    rank: "Kittur Selected",
-    image_path: "",
-    is_featured: false,
-    display_order: 10,
-    created_at: new Date().toISOString(),
-    created_by: null,
-  },
 ];
 
 // Mock achiever images — mapped to congratulations folder (student achievement posters)
@@ -511,8 +469,6 @@ export const MOCK_ACHIEVER_IMAGES: Record<string, string> = {
   "ach-vishala": "/img/congactulations/congracts7.jpeg",      // Navodaya + Kittur results (blue)
   "ach-vikas": "/img/congactulations/WhatsApp Image 2026-04-22 at 17.09.37.jpeg", // Sainik results poster
   "ach-poorvi": "/img/congactulations/congracts2.jpeg",       // Navodaya + Kittur poster
-  "ach-anushri": "/img/congactulations/congracts3.jpeg",
-  "ach-pratiksha": "/img/congactulations/congracts4.jpeg",
 };
 
 // ========== GALLERY — Organized by actual image folders ==========
@@ -536,8 +492,6 @@ export const MOCK_GALLERY: GalleryImage[] = [
   { id: "gal-press-1", title: "Hasiru Kranti Coverage", category: "Press Coverage", image_path: "", is_featured: false, display_order: 13, created_at: new Date().toISOString(), created_by: null },
   { id: "gal-press-2", title: "Kannada Prabha Coverage", category: "Press Coverage", image_path: "", is_featured: false, display_order: 14, created_at: new Date().toISOString(), created_by: null },
   { id: "gal-press-3", title: "Newspaper Results Article", category: "Press Coverage", image_path: "", is_featured: false, display_order: 15, created_at: new Date().toISOString(), created_by: null },
-  { id: "gal-event-7", title: "MLA Laxman Savadi Smartwatch Distribution", category: "Events", image_path: "", is_featured: true, display_order: 16, created_at: new Date().toISOString(), created_by: null },
-  { id: "gal-achieve-4", title: "Sainik School Entrance Exam - 94% Result", category: "Achievements", image_path: "", is_featured: true, display_order: 17, created_at: new Date().toISOString(), created_by: null },
 ];
 
 // Mock gallery images — properly categorized by folder
@@ -561,8 +515,6 @@ export const MOCK_GALLERY_IMAGES: Record<string, string> = {
   "gal-press-1": "/img/newspaper/news4.jpeg",                 // Hasiru Kranti coverage
   "gal-press-2": "/img/newspaper/news8.jpeg",                 // Kannada Prabha coverage
   "gal-press-3": "/img/newspaper/news2.jpeg",                 // Newspaper results article
-  "gal-event-7": "/img/congactulations/congracts6.jpeg",
-  "gal-achieve-4": "/img/congactulations/WhatsApp Image 2026-04-22 at 17.09.37.jpeg",
 };
 
 // ========== MARQUEE ==========
@@ -596,28 +548,6 @@ export const MOCK_MARQUEE_MESSAGES: MarqueeMessage[] = [
     highlight: false,
     is_active: true,
     display_order: 3,
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-    created_by: null,
-  },
-  {
-    id: "msg-4",
-    text: "Historic Achievement: 64 out of 68 students qualified in All India Sainik School Entrance Exam (94% result)!",
-    icon: "award",
-    highlight: true,
-    is_active: true,
-    display_order: 0,
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-    created_by: null,
-  },
-  {
-    id: "msg-5",
-    text: "MLA Laxman Savadi distributed smartwatches to our Navodaya & Kittur achievers — Congratulations to all!",
-    icon: "gift",
-    highlight: true,
-    is_active: true,
-    display_order: 1,
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
     created_by: null,

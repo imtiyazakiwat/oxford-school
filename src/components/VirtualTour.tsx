@@ -33,17 +33,11 @@ export default function VirtualTour() {
                     transition={{ delay: 0.1 }}
                     className="relative w-full rounded-xl overflow-hidden shadow-2xl"
                 >
-                    {/* 16:9 Aspect Ratio Container */}
-                    <div className="relative w-full" style={{ paddingBottom: "56.25%" }}>
-                        {/* TODO: Replace with actual YouTube/Facebook video URL when provided by client */}
-                        <iframe
-                            className="absolute top-0 left-0 w-full h-full"
-                            src="https://www.youtube.com/embed/dQw4w9WgXcQ?si=mock&autoplay=0&mute=1&loop=1&playlist=dQw4w9WgXcQ&controls=1&rel=0&modestbranding=1"
-                            title="New Oxford Coaching Classes Campus Tour"
-                            frameBorder="0"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                            referrerPolicy="strict-origin-when-cross-origin"
-                            allowFullScreen
+                    <div className="relative w-full aspect-video">
+                        <img
+                            src="/img/tour-image.jpeg"
+                            alt="New Oxford Coaching Classes Campus Tour"
+                            className="absolute top-0 left-0 w-full h-full object-cover"
                         />
                     </div>
                 </motion.div>
