@@ -96,25 +96,33 @@ export default function Navbar({ onLoginSuccess }: NavbarProps) {
   };
 
   const handleNavLinkClick = (e: React.MouseEvent, href: string) => {
-    setIsOpen(false);
     if (href.startsWith("/#")) {
       const id = href.substring(2);
       if (window.location.pathname === "/") {
         e.preventDefault();
-        const element = document.getElementById(id);
-        if (element) {
-          const offset = 80; // Navbar height
-          const bodyRect = document.body.getBoundingClientRect().top;
-          const elementRect = element.getBoundingClientRect().top;
-          const elementPosition = elementRect - bodyRect;
-          const offsetPosition = elementPosition - offset;
+        setIsOpen(false);
+        
+        // Use a small timeout to allow the menu closure animation to start/complete 
+        // or at least not interfere with the calculation
+        setTimeout(() => {
+          const element = document.getElementById(id);
+          if (element) {
+            const navbarHeight = 80;
+            const elementPosition = element.getBoundingClientRect().top;
+            const offsetPosition = elementPosition + window.pageYOffset - navbarHeight;
 
-          window.scrollTo({
-            top: offsetPosition,
-            behavior: "smooth"
-          });
-        }
+            window.scrollTo({
+              top: offsetPosition,
+              behavior: "smooth"
+            });
+          }
+        }, 10);
+      } else {
+        // If on another page, menu will close via setIsOpen(false) in the default link behavior
+        setIsOpen(false);
       }
+    } else {
+      setIsOpen(false);
     }
   };
 
