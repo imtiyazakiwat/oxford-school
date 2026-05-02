@@ -69,7 +69,7 @@ export default function ExamRegistrationModal({ isOpen, onClose }: ExamRegistrat
     if (!printContent) return;
     const win = window.open("", "_blank");
     if (!win) return;
-    win.document.write(`<!DOCTYPE html><html><head><title>Hall Ticket - ${registration?.hall_ticket_number}</title>
+    win.document.write(`<!DOCTYPE html><html><head><title>The Oxford Award - ${registration?.hall_ticket_number}</title>
       <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Segoe UI', sans-serif; padding: 20px; }
@@ -88,10 +88,10 @@ export default function ExamRegistrationModal({ isOpen, onClose }: ExamRegistrat
         @media print { body { padding: 0; } .ticket { border-width: 2px; } }
       </style></head><body>
       <div class="ticket">
-        <div class="header"><h1>New Oxford Coaching Classes</h1><p>Exam Hall Ticket</p></div>
+        <div class="header"><h1>New Oxford Coaching Classes</h1><p>The Oxford Award</p></div>
         <div class="body">
           <div class="photo-row">
-            <div><p class="ht-number">Hall Ticket: ${registration?.hall_ticket_number}</p><p style="font-size:13px;color:#666;margin-top:4px">${registration?.full_name}</p></div>
+            <div><p class="ht-number">ID: ${registration?.hall_ticket_number}</p><p style="font-size:13px;color:#666;margin-top:4px">${registration?.full_name}</p></div>
             ${registration?.photo_url ? `<img class="photo" src="${registration.photo_url}" alt="Photo"/>` : ""}
           </div>
           <div class="grid">
@@ -108,7 +108,7 @@ export default function ExamRegistrationModal({ isOpen, onClose }: ExamRegistrat
             <div class="field" style="grid-column:span 2"><label>Village & Address</label><p>${registration?.village_address}</p></div>
           </div>
         </div>
-        <div class="footer">This is a computer-generated hall ticket. Please bring this to the exam center.<br/>Contact: +91 95919 57558</div>
+        <div class="footer">This is a computer-generated document. Please bring this to the exam center.<br/>Contact: +91 95919 57558</div>
       </div></body></html>`);
     win.document.close();
     win.print();
@@ -138,19 +138,19 @@ export default function ExamRegistrationModal({ isOpen, onClose }: ExamRegistrat
           <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", stiffness: 200 }}>
             <CheckCircle className="w-20 h-20 text-green-500 mb-4 mx-auto" />
           </motion.div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-1">Your Hall Ticket</h2>
-          <p className="text-gray-500 text-sm mb-6">Please save or print this for the exam</p>
+          <h2 className="text-2xl font-bold text-gray-900 mb-1">The Oxford Award</h2>
+          <p className="text-gray-500 text-sm mb-6">Please save or print this document for the exam</p>
 
           {/* Hall Ticket Card */}
           <div id="hall-ticket-print" className="w-full max-w-2xl border-2 border-[#c41e3a] rounded-xl overflow-hidden">
             <div className="bg-[#c41e3a] text-white px-6 py-4 text-center">
               <h3 className="text-xl font-bold">New Oxford Coaching Classes</h3>
-              <p className="text-white/80 text-sm">Exam Hall Ticket</p>
+              <p className="text-white/80 text-sm">The Oxford Award</p>
             </div>
             <div className="p-6">
               <div className="flex justify-between items-start mb-6">
                 <div>
-                  <p className="text-lg font-bold text-[#c41e3a]">Hall Ticket: {registration.hall_ticket_number}</p>
+                  <p className="text-lg font-bold text-[#c41e3a]">ID: {registration.hall_ticket_number}</p>
                   <p className="text-gray-600 text-sm mt-1">{registration.full_name}</p>
                 </div>
                 {registration.photo_url && (
@@ -182,7 +182,7 @@ export default function ExamRegistrationModal({ isOpen, onClose }: ExamRegistrat
               </div>
             </div>
             <div className="border-t-2 border-dashed px-6 py-3 text-center text-xs text-gray-500">
-              This is a computer-generated hall ticket. Please bring this to the exam center. Contact: +91 95919 57558
+              This is a computer-generated document. Please bring this to the exam center. Contact: +91 95919 57558
             </div>
           </div>
 
@@ -221,7 +221,7 @@ export default function ExamRegistrationModal({ isOpen, onClose }: ExamRegistrat
           <div className="bg-green-50 border border-green-200 rounded-xl p-4">
             <CheckCircle className="w-10 h-10 text-green-500 mx-auto mb-2" />
             <p className="font-semibold text-green-800">Form Submitted Successfully!</p>
-            <p className="text-sm text-green-600">Hall Ticket: <span className="font-bold">{registration.hall_ticket_number}</span></p>
+            <p className="text-sm text-green-600">Registration ID: <span className="font-bold">{registration.hall_ticket_number}</span></p>
           </div>
 
           {/* QR Code */}
@@ -258,11 +258,11 @@ export default function ExamRegistrationModal({ isOpen, onClose }: ExamRegistrat
 
           <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 text-sm text-amber-800">
             <p className="font-medium mb-1">📌 Important</p>
-            <p>After payment, your hall ticket is ready. Payment will be verified by the admin at the exam center.</p>
+            <p>After payment, your document is ready. Payment will be verified by the admin at the exam center.</p>
           </div>
 
           <button onClick={() => setStep("hallticket")} className="w-full py-3 bg-[#c41e3a] text-white rounded-lg hover:bg-[#a81832] transition-colors font-semibold">
-            View & Download Hall Ticket →
+            View & Download Oxford Award →
           </button>
         </div>
       </GlobalPopup>
@@ -395,7 +395,7 @@ export default function ExamRegistrationModal({ isOpen, onClose }: ExamRegistrat
         <div className="border-t pt-6">
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6 text-sm text-blue-800">
             <p className="font-medium mb-1">📋 Registration Fee: ₹300</p>
-            <p>After submitting the form, you will be shown UPI payment details. Hall ticket will be generated immediately.</p>
+            <p>After submitting the form, you will be shown UPI payment details. The Oxford Award will be generated immediately.</p>
           </div>
           <div className="flex gap-4 justify-end">
             <button type="button" onClick={handleClose} className="px-6 py-3 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors">Cancel</button>
