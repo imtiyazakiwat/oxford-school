@@ -12,7 +12,17 @@ function generateNonce(): string {
   return Buffer.from(array).toString("base64");
 }
 
-export function proxy(request: NextRequest) {
+export function middleware(request: NextRequest) {
+  const url = request.nextUrl.clone();
+  
+  // Dashboard access control: only admin dashboard is allowed.
+  // Redirect /student or any other dashboard path to /admin.
+  const path = url.pathname;
+  if (path.startsWith('/student') || path.startsWith('/teacher') || path.startsWith('/parent') || path.startsWith('/staff')) {
+    url.pathname = '/admin';
+    return NextResponse.redirect(url);
+  }
+
   const response = NextResponse.next();
   const nonce = generateNonce();
 

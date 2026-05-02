@@ -20,6 +20,20 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: ".",
   },
+  async redirects() {
+    return [
+      {
+        source: '/student',
+        destination: '/admin',
+        permanent: true,
+      },
+      {
+        source: '/student/:path*',
+        destination: '/admin',
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default nextConfig;
