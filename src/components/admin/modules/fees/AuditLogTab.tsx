@@ -12,7 +12,7 @@ import {
 import {
   FeeAuditLog,
   getFeeAuditLogs,
-} from "@/supabase/fees";
+} from "@/firebase/fees";
 
 export default function AuditLogTab() {
   const [logs, setLogs] = useState<FeeAuditLog[]>([]);
@@ -38,7 +38,7 @@ export default function AuditLogTab() {
     if (dateTo) filters.end_date = dateTo;
 
     const { data } = await getFeeAuditLogs(Object.keys(filters).length > 0 ? filters : undefined);
-    setLogs(data);
+    setLogs(data || []);
     setLoading(false);
   }, [actionFilter, tableFilter, dateFrom, dateTo]);
 

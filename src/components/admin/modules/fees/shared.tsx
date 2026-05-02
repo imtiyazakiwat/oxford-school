@@ -1,6 +1,6 @@
 "use client";
 
-import { FeeStatus } from "@/supabase/fees";
+import { FeeStatus } from "@/firebase/fees";
 
 // Current academic year helper
 export const getCurrentAcademicYear = () => {

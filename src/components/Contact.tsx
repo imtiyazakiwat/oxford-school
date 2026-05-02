@@ -26,6 +26,11 @@ const contactInfo = [
     title: "Office Hours",
     details: ["Mon - Sat: 9:00 AM - 6:00 PM", "Sunday: Closed"],
   },
+  {
+    icon: Mail,
+    title: "Email",
+    details: ["noccj2023@gmail.com"],
+  },
 ];
 
 export default function Contact() {

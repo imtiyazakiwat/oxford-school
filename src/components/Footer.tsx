@@ -141,7 +141,10 @@ export default function Footer() {
                 <Phone className="w-4 h-4 sm:w-5 sm:h-5 text-[#c41e3a] flex-shrink-0" />
                 <span className="text-gray-400 text-xs sm:text-sm">+91 9590483488 / 9740412339</span>
               </li>
-              {/* TODO: Add email when provided by client */}
+              <li className="flex items-center gap-2 sm:gap-3">
+                <Mail className="w-4 h-4 sm:w-5 sm:h-5 text-[#c41e3a] flex-shrink-0" />
+                <span className="text-gray-400 text-xs sm:text-sm">noccj2023@gmail.com</span>
+              </li>
             </ul>
           </div>
         </div>

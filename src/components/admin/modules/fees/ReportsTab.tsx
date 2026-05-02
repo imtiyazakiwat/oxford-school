@@ -13,7 +13,7 @@ import {
   getDefaultersReport,
   getClassWiseReport,
   exportReportToCSV,
-} from "@/supabase/fees";
+} from "@/firebase/fees";
 import { formatCurrency, formatDate, classOptions } from "./shared";
 
 interface ReportsTabProps {

@@ -1,82 +1,44 @@
 /**
  * Server-side authentication utilities
- * Provides secure patterns for API route authentication
+ * Provides secure patterns for API route authentication using Firebase
  */
 
-import { createClient } from "@supabase/supabase-js";
 import { NextRequest, NextResponse } from "next/server";
+import { getAdminAuth, getAdminDb } from "@/firebase/admin";
 import { validateCSRFToken } from "./csrf";
 
 /**
- * Create a Supabase client with the user's JWT token
- * This respects RLS policies - use for user-context operations
+ * Validate that the request is from an authenticated admin user
  */
-export function createUserClient(request: NextRequest) {
+export async function validateAdminRequest(request: NextRequest) {
+  const auth = getAdminAuth();
+  const db = getAdminDb();
+  if (!auth || !db) return null;
+
   const authHeader = request.headers.get("authorization");
   const token = authHeader?.replace("Bearer ", "");
 
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      global: {
-        headers: token ? { Authorization: `Bearer ${token}` } : {},
-      },
+  if (!token) return null;
+
+  try {
+    const decodedToken = await auth.verifyIdToken(token);
+    const userId = decodedToken.uid;
+
+    const userDoc = await db.collection("users").doc(userId).get();
+    const userData = userDoc.data();
+
+    if (userData?.role !== "admin" && userData?.role !== "super_admin") {
+      return null;
     }
-  );
 
-  return supabase;
-}
-
-/**
- * Create a Supabase admin client (bypasses RLS)
- * ONLY use for operations that genuinely require admin access
- * Always validate authorization BEFORE using this client
- */
-export function createAdminClient() {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-
-  if (!supabaseUrl || !serviceRoleKey) {
-    throw new Error("Missing Supabase admin credentials");
-  }
-
-  return createClient(supabaseUrl, serviceRoleKey, {
-    auth: {
-      autoRefreshToken: false,
-      persistSession: false,
-    },
-  });
-}
-
-/**
- * Validate that the request is from an authenticated admin user
- * Returns the user if valid, null otherwise
- */
-export async function validateAdminRequest(request: NextRequest) {
-  const userClient = createUserClient(request);
-  
-  const { data: { user }, error } = await userClient.auth.getUser();
-  
-  if (error || !user) {
+    return { id: userId, email: decodedToken.email, role: userData.role };
+  } catch (error) {
     return null;
   }
-
-  // Check admin role
-  const { data: roleData } = await userClient.rpc("get_user_role", {
-    user_uuid: user.id,
-  });
-
-  if (roleData !== "admin") {
-    return null;
-  }
-
-  return user;
 }
 
 /**
  * Middleware helper for protected API routes
- * Validates authentication and optionally CSRF
  */
 export async function protectApiRoute(
   request: NextRequest,
@@ -85,70 +47,60 @@ export async function protectApiRoute(
     requireAdmin?: boolean;
     requireCSRF?: boolean;
   } = {}
-): Promise<{ error: NextResponse | null; user: { id: string; email?: string } | null }> {
+): Promise<{ error: NextResponse | null; user: { id: string; email?: string; role?: string } | null }> {
   const { requireAuth = true, requireAdmin = false, requireCSRF = false } = options;
 
-  // CSRF validation for state-changing requests
+  // CSRF validation
   if (requireCSRF && ["POST", "PUT", "PATCH", "DELETE"].includes(request.method)) {
     if (!validateCSRFToken(request)) {
       return {
-        error: NextResponse.json(
-          { error: "Invalid or missing CSRF token" },
-          { status: 403 }
-        ),
+        error: NextResponse.json({ error: "Invalid or missing CSRF token" }, { status: 403 }),
         user: null,
       };
     }
   }
 
-  // Authentication check
   if (requireAuth) {
-    const userClient = createUserClient(request);
-    const { data: { user }, error } = await userClient.auth.getUser();
+    const auth = getAdminAuth();
+    if (!auth) return { error: NextResponse.json({ error: "Auth not configured" }, { status: 500 }), user: null };
 
-    if (error || !user) {
-      return {
-        error: NextResponse.json(
-          { error: "Authentication required" },
-          { status: 401 }
-        ),
-        user: null,
-      };
+    const authHeader = request.headers.get("authorization");
+    const token = authHeader?.replace("Bearer ", "");
+
+    if (!token) {
+      return { error: NextResponse.json({ error: "Authentication required" }, { status: 401 }), user: null };
     }
 
-    // Admin check
-    if (requireAdmin) {
-      const { data: roleData } = await userClient.rpc("get_user_role", {
-        user_uuid: user.id,
-      });
+    try {
+      const decodedToken = await auth.verifyIdToken(token);
+      const user = { id: decodedToken.uid, email: decodedToken.email };
 
-      if (roleData !== "admin") {
-        return {
-          error: NextResponse.json(
-            { error: "Admin access required" },
-            { status: 403 }
-          ),
-          user: null,
-        };
+      if (requireAdmin) {
+        const db = getAdminDb();
+        if (!db) return { error: NextResponse.json({ error: "DB not configured" }, { status: 500 }), user: null };
+
+        const userDoc = await db.collection("users").doc(user.id).get();
+        const userData = userDoc.data();
+
+        if (userData?.role !== "admin" && userData?.role !== "super_admin") {
+          return { error: NextResponse.json({ error: "Admin access required" }, { status: 403 }), user: null };
+        }
+        return { error: null, user: { ...user, role: userData.role } };
       }
-    }
 
-    return { error: null, user: { id: user.id, email: user.email } };
+      return { error: null, user };
+    } catch (error) {
+      return { error: NextResponse.json({ error: "Invalid token" }, { status: 401 }), user: null };
+    }
   }
 
   return { error: null, user: null };
 }
 
-/**
- * Standard error response helper
- */
 export function apiError(message: string, status: number = 400): NextResponse {
   return NextResponse.json({ error: message }, { status });
 }
 
-/**
- * Standard success response helper
- */
 export function apiSuccess<T>(data: T, status: number = 200): NextResponse {
   return NextResponse.json(data, { status });
 }

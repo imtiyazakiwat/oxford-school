@@ -76,14 +76,14 @@ export function middleware(request: NextRequest) {
     // Styles: Allow Google Fonts
     "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
 
-    // Images: Allow Supabase, Unsplash, Vercel
-    "img-src 'self' blob: data: https://*.supabase.co https://images.unsplash.com https://vercel.live https://vercel.com",
+    // Images: Allow Firebase, Unsplash, Vercel
+    "img-src 'self' blob: data: https://*.firebasestorage.app https://firebasestorage.googleapis.com https://images.unsplash.com https://vercel.live https://vercel.com",
 
     // Fonts: Allow Google Fonts
     "font-src 'self' data: https://fonts.gstatic.com",
 
-    // API connections: Allow Supabase, Vercel Analytics/Toolbar
-    "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://vercel.live https://vercel.com https://vitals.vercel-insights.com",
+    // API connections: Allow Firebase, Vercel Analytics/Toolbar
+    "connect-src 'self' https://*.firebaseio.com https://*.googleapis.com wss://*.firebaseio.com https://vercel.live https://vercel.com https://vitals.vercel-insights.com",
 
     // Frames: YouTube, Google, Vercel
     "frame-src 'self' https://www.youtube.com https://www.google.com https://vercel.live https://vercel.com",

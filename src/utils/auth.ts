@@ -1,137 +1,82 @@
 /**
  * Server-side authentication utilities for API routes
- * Provides secure admin verification with multiple token extraction methods
+ * Provides secure admin verification with Firebase ID tokens
  */
 
-import { createClient } from "@supabase/supabase-js";
+import { getAdminAuth, getAdminDb } from "@/firebase/admin";
 import { cookies } from "next/headers";
 import { NextRequest } from "next/server";
 
 /**
  * Verify that the request is from an authenticated admin user
- * Uses multiple token extraction methods for reliability:
- * 1. Authorization header (Bearer token)
- * 2. Supabase auth cookies (sb-access-token, sb-refresh-token)
- * 
- * @param request - The incoming request (can be Request or NextRequest)
- * @returns Object with authorized status, error message, and user if authorized
  */
 export async function verifyAdmin(request: Request | NextRequest) {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-
-  if (!supabaseUrl || !supabaseAnonKey) {
-    return { authorized: false, error: "Server configuration error" };
+  const auth = getAdminAuth();
+  if (!auth) {
+    return { authorized: false, error: "Firebase Admin not configured" };
   }
 
-  // Try to extract token from multiple sources
+  // Extract token from Authorization header
   let token: string | null = null;
-
-  // Method 1: Check Authorization header first (most reliable for API calls)
   const authHeader = request.headers.get("authorization");
   if (authHeader?.startsWith("Bearer ")) {
     token = authHeader.substring(7);
   }
 
-  // Method 2: Try to get from cookies if no header token
+  // Fallback to cookies
   if (!token) {
     try {
       const cookieStore = await cookies();
-
-      // Try different cookie names that Supabase might use
-      const possibleCookieNames = [
-        "sb-access-token",
-        `sb-${new URL(supabaseUrl).hostname.split(".")[0]}-auth-token`,
-      ];
-
-      for (const cookieName of possibleCookieNames) {
-        const cookieValue = cookieStore.get(cookieName)?.value;
-        if (cookieValue) {
-          // Supabase auth token cookie might be JSON encoded
-          try {
-            const parsed = JSON.parse(cookieValue);
-            token = parsed.access_token || parsed;
-          } catch {
-            // Not JSON, use as-is
-            token = cookieValue;
-          }
-          break;
-        }
-      }
-    } catch (cookieError) {
-      // Cookie access might fail in some contexts, continue without
-      console.warn("Cookie access failed:", cookieError);
+      token = cookieStore.get("firebase-token")?.value || null;
+    } catch {
+      // Ignore cookie errors
     }
   }
 
-  // No token found from any source
   if (!token) {
     return { authorized: false, error: "No authentication token provided" };
   }
 
-  // Create Supabase client with the extracted token
-  const supabase = createClient(supabaseUrl, supabaseAnonKey, {
-    auth: {
-      persistSession: false,
-      autoRefreshToken: false,
-    },
-    global: {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    },
-  });
+  try {
+    const decodedToken = await auth.verifyIdToken(token);
+    const userId = decodedToken.uid;
 
-  // Verify the token and get user
-  const { data: { user }, error: userError } = await supabase.auth.getUser();
+    // Check user role in Firestore
+    const db = getAdminDb();
+    if (!db) return { authorized: false, error: "Firestore not configured" };
 
-  if (userError || !user) {
+    const userDoc = await db.collection("users").doc(userId).get();
+    const userData = userDoc.data();
+    const role = userData?.role || null;
+
+    if (role !== "admin" && role !== "super_admin") {
+      return { authorized: false, error: "Access denied: Admin privileges required" };
+    }
+
     return {
-      authorized: false,
-      error: userError?.message || "Invalid or expired authentication token"
+      authorized: true,
+      user: {
+        id: userId,
+        email: decodedToken.email,
+        role: role,
+      },
     };
+  } catch (error) {
+    console.error("Auth verification error:", error);
+    return { authorized: false, error: "Invalid or expired authentication token" };
   }
-
-  // Check user_roles table for admin role using RPC for security
-  const { data: roleData, error: roleError } = await supabase.rpc("get_user_role", {
-    user_uuid: user.id,
-  });
-
-  if (roleError) {
-    console.error("Role check error:", roleError);
-    return { authorized: false, error: "Failed to verify user role" };
-  }
-
-  // Check if user has admin or super_admin role
-  if (roleData !== "admin" && roleData !== "super_admin") {
-    return { authorized: false, error: "Access denied: Admin privileges required" };
-  }
-
-  return {
-    authorized: true,
-    user: {
-      id: user.id,
-      email: user.email,
-      role: roleData,
-    },
-  };
 }
 
 /**
  * Verify that the request is from an authenticated user (any role)
- * Less strict than verifyAdmin - just checks for valid authentication
  */
 export async function verifyAuthenticated(request: Request | NextRequest) {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-
-  if (!supabaseUrl || !supabaseAnonKey) {
-    return { authorized: false, error: "Server configuration error" };
+  const auth = getAdminAuth();
+  if (!auth) {
+    return { authorized: false, error: "Firebase Admin not configured" };
   }
 
-  // Extract token (same logic as verifyAdmin)
   let token: string | null = null;
-
   const authHeader = request.headers.get("authorization");
   if (authHeader?.startsWith("Bearer ")) {
     token = authHeader.substring(7);
@@ -140,25 +85,9 @@ export async function verifyAuthenticated(request: Request | NextRequest) {
   if (!token) {
     try {
       const cookieStore = await cookies();
-      const possibleCookieNames = [
-        "sb-access-token",
-        `sb-${new URL(supabaseUrl).hostname.split(".")[0]}-auth-token`,
-      ];
-
-      for (const cookieName of possibleCookieNames) {
-        const cookieValue = cookieStore.get(cookieName)?.value;
-        if (cookieValue) {
-          try {
-            const parsed = JSON.parse(cookieValue);
-            token = parsed.access_token || parsed;
-          } catch {
-            token = cookieValue;
-          }
-          break;
-        }
-      }
+      token = cookieStore.get("firebase-token")?.value || null;
     } catch {
-      // Continue without cookies
+      // Ignore
     }
   }
 
@@ -166,38 +95,16 @@ export async function verifyAuthenticated(request: Request | NextRequest) {
     return { authorized: false, error: "No authentication token provided" };
   }
 
-  const supabase = createClient(supabaseUrl, supabaseAnonKey, {
-    auth: {
-      persistSession: false,
-      autoRefreshToken: false,
-    },
-    global: {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    },
-  });
-
-  const { data: { user }, error: userError } = await supabase.auth.getUser();
-
-  if (userError || !user) {
+  try {
+    const decodedToken = await auth.verifyIdToken(token);
     return {
-      authorized: false,
-      error: userError?.message || "Invalid or expired authentication token"
+      authorized: true,
+      user: {
+        id: decodedToken.uid,
+        email: decodedToken.email,
+      },
     };
+  } catch (error) {
+    return { authorized: false, error: "Invalid or expired authentication token" };
   }
-
-  // Get user role for context
-  const { data: roleData } = await supabase.rpc("get_user_role", {
-    user_uuid: user.id,
-  });
-
-  return {
-    authorized: true,
-    user: {
-      id: user.id,
-      email: user.email,
-      role: roleData || null,
-    },
-  };
 }

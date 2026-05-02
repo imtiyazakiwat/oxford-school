@@ -17,7 +17,7 @@ import {
   createFeeStructure,
   updateFeeStructure,
   deleteFeeStructure,
-} from "@/supabase/fees";
+} from "@/firebase/fees";
 import AdminPopup, {
   PopupPrimaryButton,
   PopupSecondaryButton,
@@ -256,9 +256,9 @@ export default function FeeStructuresTab({ academicYear, userId }: FeeStructures
   };
 
   const handleUpdate = async () => {
-    if (!selectedStructure) return;
+    if (!selectedStructure || !userId) return;
     setSaving(true);
-    const { error } = await updateFeeStructure(selectedStructure.id, formData);
+    const { error } = await updateFeeStructure(selectedStructure.id, formData, userId);
     if (error) {
       alert("Error: " + error);
     } else {

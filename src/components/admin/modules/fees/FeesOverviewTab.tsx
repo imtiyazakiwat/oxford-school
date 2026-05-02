@@ -13,7 +13,7 @@ import {
   FeeStatistics,
   getFeeStatistics,
   updateOverdueStatuses,
-} from "@/supabase/fees";
+} from "@/firebase/fees";
 import { formatCurrency, formatDate, StatusBadge, StatCard } from "./shared";
 
 interface FeesOverviewTabProps {

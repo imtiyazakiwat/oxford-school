@@ -57,7 +57,7 @@ export default function AdminLogin() {
     // Check if user has admin role using the user ID from sign-in response
     setCheckingRole(true);
 
-    const role = await fetchUserRole(signedInUser.uid);
+    const role = await fetchUserRole();
     console.log("Admin login - role check:", { userId: signedInUser.uid, role });
 
     if (role !== "admin" && signedInUser.email !== "admin@oxfordschool.com") {

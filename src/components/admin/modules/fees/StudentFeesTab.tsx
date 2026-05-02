@@ -20,9 +20,9 @@ import {
   getFeeRecords,
   assignFeeToStudent,
   updateFeeRecord,
-} from "@/supabase/fees";
-import { getStudents, Student } from "@/supabase/students";
-import { logStudentAudit } from "@/supabase/studentAudit";
+} from "@/firebase/fees";
+import { getStudents, Student } from "@/firebase/students";
+import { logStudentAudit } from "@/firebase/studentAudit";
 import AdminPopup, {
   PopupPrimaryButton,
   PopupSecondaryButton,

@@ -8,7 +8,7 @@ import {
   useCallback,
   ReactNode,
 } from "react";
-import { supabase } from "@/supabase/supabase";
+import { auth } from "@/firebase/firebase";
 import {
   FeeStructure,
   FeeRecord,
@@ -20,10 +20,11 @@ import {
   AuditLogFilters,
   getFeeStructures as fetchFeeStructures,
   getFeeRecords as fetchFeeRecords,
+  getPaymentsByStudent,
   getPaymentsByDateRange,
   getFeeStatistics as fetchFeeStatistics,
-  getFeeAuditLogs as fetchFeeAuditLogs,
-} from "@/supabase/fees";
+} from "@/firebase/fees";
+import { getStudentAuditLogs as fetchFeeAuditLogs } from "@/firebase/studentAudit";
 import { getCurrentAcademicYear } from "@/components/admin/modules/fees/shared";
 
 // =============================================================================
@@ -216,8 +217,9 @@ export function FeesContextProvider({
 
   useEffect(() => {
     const getUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (user) setUserId(user.id);
+      if (!auth) return;
+      const user = auth.currentUser;
+      if (user) setUserId(user.uid);
     };
     getUser();
   }, []);
@@ -418,7 +420,7 @@ export function FeesContextProvider({
         const endDate = filters?.end_date || 
           new Date(now.getFullYear(), now.getMonth() + 1, 0).toISOString().split("T")[0];
 
-        const { data, error } = await getPaymentsByDateRange(startDate, endDate);
+        const { data, error } = await getPaymentsByStudent(filters?.student_id || "");
 
         if (error) {
           console.error("Error fetching payments:", error);

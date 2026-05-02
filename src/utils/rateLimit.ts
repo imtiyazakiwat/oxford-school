@@ -1,10 +1,8 @@
 /**
- * Hybrid rate limiter with in-memory fallback and database persistence
- * Uses database for production reliability, in-memory for development speed
+ * In-memory rate limiter
  */
 
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@supabase/supabase-js";
 
 // =============================================================================
 // TYPES
@@ -58,7 +56,7 @@ export const RATE_LIMIT_CONFIGS = {
 } as const;
 
 // =============================================================================
-// IN-MEMORY STORE (Fallback)
+// IN-MEMORY STORE
 // =============================================================================
 
 const rateLimitStore = new Map<string, RateLimitEntry>();
@@ -76,7 +74,7 @@ function cleanupExpiredEntries(): void {
 }
 
 /**
- * In-memory rate limit check (fallback when database unavailable)
+ * In-memory rate limit check
  */
 function checkRateLimitInMemory(
   identifier: string,
@@ -125,78 +123,15 @@ function checkRateLimitInMemory(
 }
 
 // =============================================================================
-// DATABASE RATE LIMITING
-// =============================================================================
-
-/**
- * Get admin Supabase client for rate limiting
- */
-function getAdminClient() {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
-
-  if (!url || !key) return null;
-
-  return createClient(url, key, {
-    auth: {
-      autoRefreshToken: false,
-      persistSession: false,
-    },
-  });
-}
-
-/**
- * Database-backed rate limit check
- */
-async function checkRateLimitDatabase(
-  identifier: string,
-  endpoint: string,
-  config: RateLimitConfig
-): Promise<RateLimitResult | null> {
-  const client = getAdminClient();
-  if (!client) return null;
-
-  try {
-    const windowSeconds = Math.ceil(config.windowMs / 1000);
-
-    const { data, error } = await client.rpc("check_rate_limit", {
-      p_identifier: identifier,
-      p_endpoint: endpoint,
-      p_max_requests: config.maxRequests,
-      p_window_seconds: windowSeconds,
-    });
-
-    if (error) {
-      console.warn("Database rate limit check failed:", error.message);
-      return null;
-    }
-
-    const result = data as { allowed: boolean; remaining: number; reset_at: string };
-    const resetAt = new Date(result.reset_at).getTime();
-    const resetIn = Math.max(0, Math.ceil((resetAt - Date.now()) / 1000));
-
-    return {
-      success: result.allowed,
-      remaining: result.remaining,
-      resetIn,
-    };
-  } catch (error) {
-    console.warn("Database rate limit error:", error);
-    return null;
-  }
-}
-
-// =============================================================================
 // PUBLIC API
 // =============================================================================
 
 /**
  * Check if a request should be rate limited
- * Uses database when available, falls back to in-memory
  * 
  * @param identifier - Unique identifier (IP address, email, etc.)
  * @param config - Rate limit configuration
- * @param endpoint - Optional endpoint name for database tracking
+ * @param endpoint - Optional endpoint name
  * @returns RateLimitResult
  */
 export async function checkRateLimitAsync(
@@ -204,17 +139,11 @@ export async function checkRateLimitAsync(
   config: RateLimitConfig,
   endpoint: string = "default"
 ): Promise<RateLimitResult> {
-  // Try database first (production)
-  const dbResult = await checkRateLimitDatabase(identifier, endpoint, config);
-  if (dbResult) return dbResult;
-
-  // Fall back to in-memory (development or database unavailable)
   return checkRateLimitInMemory(`${endpoint}:${identifier}`, config);
 }
 
 /**
- * Synchronous rate limit check (in-memory only)
- * Use this when async is not possible
+ * Synchronous rate limit check
  * 
  * @param identifier - Unique identifier (IP address, email, etc.)
  * @param config - Rate limit configuration
@@ -229,13 +158,10 @@ export function checkRateLimit(
 
 /**
  * Extract client IP from request
- * Handles various proxy headers
  */
 export function getClientIP(request: NextRequest): string {
-  // Check various headers in order of preference
   const forwardedFor = request.headers.get("x-forwarded-for");
   if (forwardedFor) {
-    // Take the first IP (original client)
     const ips = forwardedFor.split(",").map(ip => ip.trim());
     if (ips[0]) return ips[0];
   }
@@ -243,26 +169,7 @@ export function getClientIP(request: NextRequest): string {
   const realIP = request.headers.get("x-real-ip");
   if (realIP) return realIP;
 
-  const cfConnectingIP = request.headers.get("cf-connecting-ip");
-  if (cfConnectingIP) return cfConnectingIP;
-
-  // Fallback to a hash of user agent + accept headers for some uniqueness
-  const userAgent = request.headers.get("user-agent") || "";
-  const accept = request.headers.get("accept") || "";
-  return `unknown-${hashString(userAgent + accept)}`;
-}
-
-/**
- * Simple string hash for fallback IP identification
- */
-function hashString(str: string): string {
-  let hash = 0;
-  for (let i = 0; i < str.length; i++) {
-    const char = str.charCodeAt(i);
-    hash = ((hash << 5) - hash) + char;
-    hash = hash & hash; // Convert to 32bit integer
-  }
-  return Math.abs(hash).toString(36);
+  return "unknown";
 }
 
 /**

@@ -15,7 +15,7 @@ import {
   getFeeRecords,
   recordPayment,
   getPaymentsByDateRange,
-} from "@/supabase/fees";
+} from "@/firebase/fees";
 import AdminPopup, {
   PopupPrimaryButton,
   PopupSecondaryButton,
@@ -45,6 +45,9 @@ export default function PaymentsTab({ academicYear, userId }: PaymentsTabProps) 
     amount: 0,
     payment_date: new Date().toISOString().split("T")[0],
     notes: "",
+    payment_method: "cash",
+    receipt_number: `RCP-${Date.now().toString().slice(-6)}`,
+    academic_year: academicYear,
   });
 
   const fetchData = useCallback(async () => {
@@ -126,7 +129,12 @@ export default function PaymentsTab({ academicYear, userId }: PaymentsTabProps) 
     if (error) {
       alert("Error: " + error);
     } else if (data) {
-      setSelectedPayment(data);
+      // Add student info for receipt display
+      const paymentWithStudent = {
+        ...data,
+        student: selectedRecord?.student
+      };
+      setSelectedPayment(paymentWithStudent);
       setShowRecordModal(false);
       setShowReceiptModal(true);
       setPaymentData({
@@ -135,6 +143,9 @@ export default function PaymentsTab({ academicYear, userId }: PaymentsTabProps) 
         amount: 0,
         payment_date: new Date().toISOString().split("T")[0],
         notes: "",
+        payment_method: "cash",
+        receipt_number: `RCP-${Date.now().toString().slice(-6)}`,
+        academic_year: academicYear,
       });
       setSelectedRecord(null);
       fetchData();
@@ -366,6 +377,33 @@ export default function PaymentsTab({ academicYear, userId }: PaymentsTabProps) 
             {selectedRecord && paymentData.amount > selectedRecord.due_fees && (
               <p className="text-sm text-red-500 mt-1">Amount cannot exceed due fees</p>
             )}
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Receipt Number *</label>
+              <input
+                type="text"
+                value={paymentData.receipt_number}
+                onChange={(e) => setPaymentData({ ...paymentData, receipt_number: e.target.value })}
+                className={inputClass}
+                placeholder="RCP-123456"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Payment Method *</label>
+              <select
+                value={paymentData.payment_method}
+                onChange={(e) => setPaymentData({ ...paymentData, payment_method: e.target.value })}
+                className={selectClass}
+              >
+                <option value="cash">Cash</option>
+                <option value="online">Online</option>
+                <option value="cheque">Cheque</option>
+                <option value="upi">UPI</option>
+              </select>
+            </div>
           </div>
 
           <div>
