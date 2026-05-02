@@ -6,18 +6,17 @@ import { Trophy, ArrowUpDown, Calendar, Award, ChevronLeft, ChevronRight } from 
 import Link from "next/link";
 import { getAllAchievers, getAchieverImageUrl, getMockAchieverImage, Achiever } from "@/firebase/achievers";
 
-const categories = ["All", "NEET", "CET", "JEE", "PUC", "SSLC", "Commerce", "Arts"];
+const categories = ["All", "Navodaya", "Sainik", "Adarsha", "Morarji", "Kittur", "Others"];
 const ITEMS_PER_PAGE = 9;
 
 const categoryDescriptions: { [key: string]: string } = {
     All: "",
-    NEET: "Medical Entrance Exam Achievers",
-    CET: "Karnataka CET Top Rankers",
-    JEE: "Engineering Entrance Qualifiers",
-    PUC: "Pre-University Course Toppers",
-    SSLC: "10th Standard Achievers",
-    Commerce: "Commerce Stream Toppers",
-    Arts: "Arts Stream Achievers",
+    Navodaya: "Jawahar Navodaya Vidyalaya Selection Achievers",
+    Sainik: "Sainik School Entrance Exam Achievers",
+    Adarsha: "Adarsha Vidyalaya Selection Achievers",
+    Morarji: "Morarji Desai Residential School Selections",
+    Kittur: "Kittur Rani Channamma Residential School Selections",
+    Others: "Other Competitive Exam Achievers",
 };
 
 type SortOption = "newest" | "oldest";

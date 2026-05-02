@@ -27,7 +27,7 @@ export default function ManageAchieversModule() {
     const [editing, setEditing] = useState(false);
     const [editForm, setEditForm] = useState({
         name: "",
-        stream: "NEET",
+        stream: "Navodaya",
         year: "",
         percentage: "",
         rank: "",
@@ -36,7 +36,7 @@ export default function ManageAchieversModule() {
     });
     const [achieverForm, setAchieverForm] = useState({
         name: "",
-        stream: "NEET",
+        stream: "Navodaya",
         year: new Date().getFullYear().toString(),
         percentage: "",
         rank: "",
@@ -44,7 +44,7 @@ export default function ManageAchieversModule() {
         image: null as File | null,
     });
 
-    const streams = ["NEET", "CET", "JEE", "PUC", "SSLC", "Commerce", "Arts"];
+    const streams = ["Navodaya", "Sainik", "Adarsha", "Morarji", "Kittur", "Others"];
     const years = Array.from({ length: 10 }, (_, i) => (new Date().getFullYear() - i).toString());
     const featuredCount = achievers.filter(a => a.is_featured).length;
     const MAX_FEATURED = 6;
@@ -137,7 +137,7 @@ export default function ManageAchieversModule() {
             setSubmitting(false);
             return;
         }
-        setAchieverForm({ name: "", stream: "NEET", year: new Date().getFullYear().toString(), percentage: "", rank: "", is_featured: false, image: null });
+        setAchieverForm({ name: "", stream: "Navodaya", year: new Date().getFullYear().toString(), percentage: "", rank: "", is_featured: false, image: null });
         await loadAchievers();
         setSubmitting(false);
     };
