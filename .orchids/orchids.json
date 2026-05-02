@@ -1,0 +1,7 @@
+{
+  "projectId": "1c9cef76-4f1b-4b84-ade8-6044a4f8b92f",
+  "createdAt": 1766379104290,
+  "startupCommands": [
+    "cd sarvodaya-college && bun run dev -- -p 3040"
+  ]
+}

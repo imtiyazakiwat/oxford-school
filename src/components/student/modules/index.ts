@@ -1,0 +1,10 @@
+export { default as DashboardOverview } from "./DashboardOverview";
+export { default as ResultsModule } from "./ResultsModule";
+export { default as AttendanceModule } from "./AttendanceModule";
+export { default as TimetableModule } from "./TimetableModule";
+export { default as AssignmentsModule } from "./AssignmentsModule";
+export { default as LibraryModule } from "./LibraryModule";
+export { default as FeesModule } from "./FeesModule";
+export { default as DetailsModule } from "./DetailsModule";
+export { default as AnnouncementsModule } from "./AnnouncementsModule";
+export type { StudentData } from "./types";
