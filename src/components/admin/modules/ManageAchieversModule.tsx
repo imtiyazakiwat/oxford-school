@@ -277,7 +277,7 @@ export default function ManageAchieversModule() {
                         </div>
                     </div>
                     <div className="flex justify-end gap-3">
-                        <button type="button" onClick={() => setAchieverForm({ name: "", stream: "NEET", year: new Date().getFullYear().toString(), percentage: "", rank: "", is_featured: false, image: null })} className="px-6 py-2.5 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50">Clear</button>
+                        <button type="button" onClick={() => setAchieverForm({ name: "", stream: "Navodaya", year: new Date().getFullYear().toString(), percentage: "", rank: "", is_featured: false, image: null })} className="px-6 py-2.5 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50">Clear</button>
                         <button type="submit" disabled={submitting} className="px-6 py-2.5 bg-[#c41e3a] text-white rounded-lg hover:bg-[#a81832] flex items-center gap-2 disabled:opacity-50">
                             {submitting ? (<><div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />Saving...</>) : (<><Plus className="w-4 h-4" />Add Achiever</>)}
                         </button>
