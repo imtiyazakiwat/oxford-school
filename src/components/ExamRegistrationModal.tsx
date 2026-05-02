@@ -199,9 +199,9 @@ export default function ExamRegistrationModal({ isOpen, onClose }: ExamRegistrat
     );
   }
 
-  const UPI_ID = "9591957558@ybl";
+  const UPI_ID = "9591957558-3@axl";
   const UPI_NAME = "New Oxford Coaching Classes";
-  const UPI_AMOUNT = "1000";
+  const UPI_AMOUNT = "300";
   const UPI_NOTE = registration ? `Exam Reg ${registration.hall_ticket_number}` : "Exam Registration";
   const upiUrl = `upi://pay?pa=${UPI_ID}&pn=${encodeURIComponent(UPI_NAME)}&am=${UPI_AMOUNT}&cu=INR&tn=${encodeURIComponent(UPI_NOTE)}`;
   const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(upiUrl)}`;
@@ -216,7 +216,7 @@ export default function ExamRegistrationModal({ isOpen, onClose }: ExamRegistrat
   // Step 2: Payment Info
   if (step === "payment" && registration) {
     return (
-      <GlobalPopup isOpen={isOpen} onClose={handleClose} size="lg" title="Complete Payment" subtitle="Pay ₹1,000 registration fee via UPI">
+      <GlobalPopup isOpen={isOpen} onClose={handleClose} size="lg" title="Complete Payment" subtitle="Pay ₹300 registration fee via UPI">
         <div className="text-center space-y-6">
           <div className="bg-green-50 border border-green-200 rounded-xl p-4">
             <CheckCircle className="w-10 h-10 text-green-500 mx-auto mb-2" />
@@ -226,7 +226,7 @@ export default function ExamRegistrationModal({ isOpen, onClose }: ExamRegistrat
 
           {/* QR Code */}
           <div className="bg-gray-50 rounded-xl p-6">
-            <h3 className="text-xl font-bold text-gray-900 mb-1">Registration Fee: ₹1,000</h3>
+            <h3 className="text-xl font-bold text-gray-900 mb-1">Registration Fee: ₹300</h3>
             <p className="text-gray-500 text-sm mb-4">Scan QR code with any UPI app to pay</p>
             <div className="inline-block bg-white p-3 rounded-xl shadow-sm border border-gray-200">
               <img src={qrCodeUrl} alt="UPI QR Code" className="w-[200px] h-[200px] mx-auto" />
@@ -394,7 +394,7 @@ export default function ExamRegistrationModal({ isOpen, onClose }: ExamRegistrat
         {/* Submit */}
         <div className="border-t pt-6">
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6 text-sm text-blue-800">
-            <p className="font-medium mb-1">📋 Registration Fee: ₹1,000</p>
+            <p className="font-medium mb-1">📋 Registration Fee: ₹300</p>
             <p>After submitting the form, you will be shown UPI payment details. Hall ticket will be generated immediately.</p>
           </div>
           <div className="flex gap-4 justify-end">
