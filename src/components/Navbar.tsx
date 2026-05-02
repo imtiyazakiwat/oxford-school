@@ -8,12 +8,12 @@ import { useAuth } from "@/context/AuthContext";
 import { getAdmissionBanner } from "@/firebase/admissionBanner";
 
 const navLinks = [
-  { name: "Home", href: "#home" },
-  { name: "About", href: "#about" },
-  { name: "Achievers", href: "#achievers" },
-  { name: "Gallery", href: "#gallery" },
-  { name: "News", href: "#announcements" },
-  { name: "Contact", href: "#contact" },
+  { name: "Home", href: "/#home" },
+  { name: "About", href: "/#about" },
+  { name: "Achievers", href: "/#achievers" },
+  { name: "Gallery", href: "/#gallery" },
+  { name: "News", href: "/#announcements" },
+  { name: "Contact", href: "/#contact" },
 ];
 
 interface NavbarProps {
@@ -95,6 +95,29 @@ export default function Navbar({ onLoginSuccess }: NavbarProps) {
     }
   };
 
+  const handleNavLinkClick = (e: React.MouseEvent, href: string) => {
+    setIsOpen(false);
+    if (href.startsWith("/#")) {
+      const id = href.substring(2);
+      if (window.location.pathname === "/") {
+        e.preventDefault();
+        const element = document.getElementById(id);
+        if (element) {
+          const offset = 80; // Navbar height
+          const bodyRect = document.body.getBoundingClientRect().top;
+          const elementRect = element.getBoundingClientRect().top;
+          const elementPosition = elementRect - bodyRect;
+          const offsetPosition = elementPosition - offset;
+
+          window.scrollTo({
+            top: offsetPosition,
+            behavior: "smooth"
+          });
+        }
+      }
+    }
+  };
+
   return (
     <>
       {showBanner && (
@@ -131,6 +154,7 @@ export default function Navbar({ onLoginSuccess }: NavbarProps) {
                 <a
                   key={link.name}
                   href={link.href}
+                  onClick={(e) => handleNavLinkClick(e, link.href)}
                   className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-[#c41e3a] transition-colors relative group"
                 >
                   {link.name}
@@ -243,7 +267,7 @@ export default function Navbar({ onLoginSuccess }: NavbarProps) {
                       key={link.name}
                       href={link.href}
                       className="block px-4 py-3 text-gray-700 hover:text-[#c41e3a] hover:bg-gray-50"
-                      onClick={() => setIsOpen(false)}
+                      onClick={(e) => handleNavLinkClick(e, link.href)}
                     >
                       {link.name}
                     </a>
