@@ -6,6 +6,7 @@ import {
   MapPin,
   Phone,
   Mail,
+  Clock,
 } from "lucide-react";
 
 const quickLinks = [
@@ -139,7 +140,17 @@ export default function Footer() {
               </li>
               <li className="flex items-center gap-2 sm:gap-3">
                 <Phone className="w-4 h-4 sm:w-5 sm:h-5 text-[#c41e3a] flex-shrink-0" />
-                <span className="text-gray-400 text-xs sm:text-sm">+91 9590483488 / 9740412339</span>
+                <div className="text-gray-400 text-xs sm:text-sm">
+                  <p>JKD: +91 9590483488</p>
+                  <p>Athani: +91 9740412339</p>
+                </div>
+              </li>
+              <li className="flex items-center gap-2 sm:gap-3">
+                <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-[#c41e3a] flex-shrink-0" />
+                <div className="text-gray-400 text-xs sm:text-sm">
+                  <p>Office: 24x7 (No Sunday Off)</p>
+                  <p>Need Help: 24x7 Support</p>
+                </div>
               </li>
               <li className="flex items-center gap-2 sm:gap-3">
                 <Mail className="w-4 h-4 sm:w-5 sm:h-5 text-[#c41e3a] flex-shrink-0" />

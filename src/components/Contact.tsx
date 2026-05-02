@@ -5,33 +5,35 @@ import { motion } from "motion/react";
 import { MapPin, Phone, Mail, Clock, Send, CheckCircle, AlertCircle } from "lucide-react";
 import { submitContactForm } from "@/firebase/contactSubmissions";
 
-const contactInfo = [
-  {
-    icon: Phone,
-    title: "Phone",
-    details: ["+91 9590483488", "+91 9740412339"],
-  },
-  {
-    icon: MapPin,
-    title: "Jamkhandi Branch",
-    details: ["Alguoor RC, Near Helipad", "Kunchnoor Road - 587301"],
-  },
-  {
-    icon: MapPin,
-    title: "Athani Branch",
-    details: ["HUDKO Colony, IB Road", "Athani - 591304"],
-  },
-  {
-    icon: Mail,
-    title: "Email",
-    details: ["noccj2023@gmail.com"],
-  },
-  {
-    icon: Clock,
-    title: "Office Hours",
-    details: ["Mon - Sat: 9:00 AM - 6:00 PM", "Sunday: Closed"],
-  },
-];
+  const getContactInfo = (activeMap: "jamkhandi" | "athani") => [
+    {
+      icon: Phone,
+      title: "Phone",
+      details: activeMap === "jamkhandi" ? ["Jamkhandi: +91 9590483488"] : ["Athani: +91 9740412339"],
+    },
+    {
+      icon: Clock,
+      title: "Office Hours",
+      details: ["24x7 (No Close on Sunday)"],
+    },
+    {
+      icon: AlertCircle,
+      title: "Need Help",
+      details: ["24x7 Support Available"],
+    },
+    {
+      icon: MapPin,
+      title: activeMap === "jamkhandi" ? "Jamkhandi Branch" : "Athani Branch",
+      details: activeMap === "jamkhandi" 
+        ? ["Alguoor RC, Near Helipad", "Kunchnoor Road - 587301"]
+        : ["HUDKO Colony, IB Road", "Athani - 591304"],
+    },
+    {
+      icon: Mail,
+      title: "Email",
+      details: ["noccj2023@gmail.com"],
+    },
+  ];
 
 export default function Contact() {
   const [form, setForm] = useState({
@@ -221,7 +223,7 @@ export default function Contact() {
           <div className="space-y-6 sm:space-y-8 order-1 lg:order-2">
             {/* Contact Cards */}
             <div className="grid grid-cols-2 gap-3 sm:gap-4">
-              {contactInfo.map((item, index) => (
+              {getContactInfo(activeMap).map((item, index) => (
                 <motion.div
                   key={item.title}
                   initial={{ opacity: 0, y: 20 }}

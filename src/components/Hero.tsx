@@ -82,9 +82,9 @@ export default function Hero({ onExamRegisterClick }: HeroProps) {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-8">
             {[
               { value: "4+", label: "Years of Excellence" },
-              { value: "200+", label: "Students Trained" },
+              { value: "450+", label: "Students Trained" },
               { value: "95%", label: "Selection Rate" },
-              { value: "6th", label: "Rank in Belagavi District" },
+              { value: "258/300", label: "Sainik School Marks" },
             ].map((stat, index) => (
               <motion.div
                 key={stat.label}

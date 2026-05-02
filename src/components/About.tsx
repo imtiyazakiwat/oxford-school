@@ -20,9 +20,9 @@ const features = [
   },
   {
     icon: Award,
-    title: "95%+ Success Rate",
+    title: "Outstanding Results",
     description:
-      "Consistently outstanding results — 64 out of 68 selections in 2025–26, 6th rank in Belagavi district.",
+      "64 out of 68 selections in 2025–26. Top achievement: 258/300 marks in Sainik School entrance exam.",
   },
   {
     icon: Target,

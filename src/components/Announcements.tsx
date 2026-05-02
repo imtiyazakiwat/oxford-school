@@ -145,28 +145,6 @@ export default function Announcements({ onApplyClick }: { onApplyClick?: () => v
               </ul>
             </motion.div>
 
-            {/* CTA Box */}
-            <motion.div
-              initial={{ opacity: 0, x: 30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.1 }}
-              className="bg-[#f7c52d] p-6 rounded-lg"
-            >
-              <h3 className="font-bold text-xl text-gray-900 mb-2">
-                Ready to Join?
-              </h3>
-              <p className="text-gray-800 text-sm mb-4">
-                Start your journey with New Oxford Coaching Classes. Admissions for 2026-27
-                are now open for all streams.
-              </p>
-              <button
-                onClick={onApplyClick}
-                className="inline-block bg-[#c41e3a] text-white px-6 py-3 font-semibold hover:bg-[#a01830] transition-colors cursor-pointer"
-              >
-                Apply Now
-              </button>
-            </motion.div>
 
             {/* Contact Box */}
             <motion.div
@@ -180,10 +158,13 @@ export default function Announcements({ onApplyClick }: { onApplyClick?: () => v
                 Need Help?
               </h3>
               <p className="text-gray-600 text-sm mb-4">
-                Our admissions team is here to help you with any questions.
+                Our admissions team is here to help you 24x7 with any questions.
               </p>
-              <p className="font-semibold text-[#c41e3a]">+91 9590483488</p>
-              <p className="text-gray-600 text-sm">Mon - Sat: 9AM - 6PM</p>
+              <div className="space-y-1 mb-4">
+                <p className="font-semibold text-[#c41e3a]">JKD: +91 9590483488</p>
+                <p className="font-semibold text-[#c41e3a]">Athani: +91 9740412339</p>
+              </div>
+              <p className="text-gray-600 text-sm font-medium">Office: 24x7 (Open Sunday)</p>
             </motion.div>
           </div>
         </div>
