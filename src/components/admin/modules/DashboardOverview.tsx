@@ -2,8 +2,9 @@
 
 import { useState, useEffect } from "react";
 import { motion } from "motion/react";
-import { ClipboardList, CheckCircle, Clock, Calendar, ArrowRight } from "lucide-react";
+import { ClipboardList, CheckCircle, Clock, Calendar, ArrowRight, Mail } from "lucide-react";
 import { getAllExamRegistrations, ExamRegistration } from "@/firebase/examRegistrations";
+import { getUnreadCount } from "@/firebase/contactSubmissions";
 
 interface DashboardOverviewProps {
     onNavigate?: (module: string) => void;
@@ -11,6 +12,7 @@ interface DashboardOverviewProps {
 
 export default function DashboardOverview({ onNavigate }: DashboardOverviewProps) {
     const [registrations, setRegistrations] = useState<ExamRegistration[]>([]);
+    const [unreadContacts, setUnreadContacts] = useState(0);
     const [loading, setLoading] = useState(true);
 
     const getGreeting = () => {
@@ -22,8 +24,12 @@ export default function DashboardOverview({ onNavigate }: DashboardOverviewProps
 
     useEffect(() => {
         const fetchData = async () => {
-            const { data } = await getAllExamRegistrations();
+            const [{ data }, { count }] = await Promise.all([
+                getAllExamRegistrations(),
+                getUnreadCount()
+            ]);
             setRegistrations(data);
+            setUnreadContacts(count);
             setLoading(false);
         };
         fetchData();
@@ -62,11 +68,11 @@ export default function DashboardOverview({ onNavigate }: DashboardOverviewProps
                     <div className="flex gap-3">
                         <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 text-center min-w-[100px]">
                             <p className="text-3xl font-bold">{loading ? "–" : registrations.length}</p>
-                            <p className="text-xs text-white/70">Total Registrations</p>
+                            <p className="text-xs text-white/70">Registrations</p>
                         </div>
-                        <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 text-center min-w-[100px]">
-                            <p className="text-3xl font-bold">{loading ? "–" : unpaidCount}</p>
-                            <p className="text-xs text-white/70">Payment Pending</p>
+                        <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 text-center min-w-[100px] cursor-pointer hover:bg-white/20 transition-colors" onClick={() => onNavigate?.("contact-submissions")}>
+                            <p className="text-3xl font-bold">{loading ? "–" : unreadContacts}</p>
+                            <p className="text-xs text-white/70">New Messages</p>
                         </div>
                     </div>
                 </div>
@@ -75,14 +81,15 @@ export default function DashboardOverview({ onNavigate }: DashboardOverviewProps
             {/* Stats */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 {[
-                    { label: "Total Registrations", value: registrations.length, icon: ClipboardList, color: "bg-blue-500" },
-                    { label: "Payment Verified", value: paidCount, icon: CheckCircle, color: "bg-green-500" },
-                    { label: "Payment Pending", value: unpaidCount, icon: Clock, color: "bg-amber-500" },
+                    { label: "Total Registrations", value: registrations.length, icon: ClipboardList, color: "bg-blue-500", module: "exam-registrations" },
+                    { label: "Unread Messages", value: unreadContacts, icon: Mail, color: "bg-[#c41e3a]", module: "contact-submissions" },
+                    { label: "Payment Verified", value: paidCount, icon: CheckCircle, color: "bg-green-500", module: "exam-registrations" },
                 ].map((stat, i) => {
                     const Icon = stat.icon;
                     return (
                         <motion.div key={stat.label} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }}
-                            className="bg-white rounded-xl p-6 shadow-sm border border-gray-100"
+                            className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 cursor-pointer hover:shadow-md transition-all"
+                            onClick={() => onNavigate?.(stat.module)}
                         >
                             <div className="flex items-start justify-between">
                                 <div>

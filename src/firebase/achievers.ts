@@ -52,8 +52,12 @@ export async function uploadAchieverImage(file: File, userId: string): Promise<{
   } catch (err) { return { path: "", error: err instanceof Error ? err.message : "Upload failed" }; }
 }
 
-export function getAchieverImageUrl(imagePath: string): string {
-  if (!imagePath || imagePath === "" || !isConfigured || !storage) return "";
+export function getAchieverImageUrl(imagePath: string, id?: string): string | null {
+  if (!imagePath || imagePath === "") {
+    if (id) return getMockAchieverImage(id);
+    return null;
+  }
+  if (!isConfigured || !storage) return getMockAchieverImage(id || "");
   return `https://firebasestorage.googleapis.com/v0/b/${process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET}/o/${encodeURIComponent(imagePath)}?alt=media`;
 }
 

@@ -95,6 +95,13 @@ export default function AuthModal({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Temporarily restrict student/staff login
+    setError("Student and Staff logins are currently restricted. Please contact the administrator.");
+    return;
+
+    // Original logic commented out for restriction
+    /*
     setError("");
     setIsLoading(true);
 
@@ -135,6 +142,7 @@ export default function AuthModal({
       setIsLoading(false);
       onLoginSuccess?.();
     }
+    */
   };
 
   const newPasswordsMatch = newPassword.length > 0 && newPassword === confirmNewPassword;
@@ -663,24 +671,22 @@ export default function AuthModal({
           </div>
         )}
 
+        <div className="p-4 bg-amber-50 border border-amber-200 rounded-lg flex items-start gap-3 text-amber-800 text-sm mb-4">
+          <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5" />
+          <div>
+            <p className="font-semibold">Logins Restricted</p>
+            <p className="mt-1">
+              {userType === "student" ? "Student" : "Staff"} dashboard and portal features are coming soon. Access is currently limited to administrators.
+            </p>
+          </div>
+        </div>
+
         <button
           type="submit"
-          disabled={isLoading}
-          className="btn-primary w-full disabled:opacity-50 disabled:cursor-not-allowed"
+          disabled={true}
+          className="btn-primary w-full opacity-50 cursor-not-allowed"
         >
-          {isLoading ? (
-            <span className="flex items-center justify-center gap-2">
-              <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-              </svg>
-              {mode === "signin" ? "Signing In..." : "Creating Account..."}
-            </span>
-          ) : mode === "signin" ? (
-            "Sign In"
-          ) : (
-            "Create Account"
-          )}
+          {mode === "signin" ? "Sign In" : "Create Account"} (Coming Soon)
         </button>
       </form>
 

@@ -181,7 +181,11 @@ export default function ManageAchieversModule() {
                                 <div><h3 className="text-lg font-semibold text-gray-900">Delete Achiever</h3><p className="text-sm text-gray-500">This action cannot be undone</p></div>
                             </div>
                             <div className="bg-gray-50 rounded-lg p-4 mb-6 flex items-center gap-3">
-                                <img src={getAchieverImageUrl(deleteModal.achiever.image_path)} alt={deleteModal.achiever.name} className="w-12 h-12 rounded-full object-cover" />
+                                {getAchieverImageUrl(deleteModal.achiever.image_path, deleteModal.achiever.id) ? (
+                                    <img src={getAchieverImageUrl(deleteModal.achiever.image_path, deleteModal.achiever.id)!} alt={deleteModal.achiever.name} className="w-12 h-12 rounded-full object-cover" />
+                                ) : (
+                                    <div className="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center"><Users className="w-6 h-6 text-gray-400" /></div>
+                                )}
                                 <div><p className="font-medium text-gray-900">{deleteModal.achiever.name}</p><p className="text-sm text-gray-500">{deleteModal.achiever.stream} - {deleteModal.achiever.year}</p></div>
                             </div>
                             <p className="text-gray-600 mb-6">Are you sure you want to delete <span className="font-semibold">{deleteModal.achiever.name}</span>? This will permanently remove their record and image from the system.</p>
@@ -210,8 +214,10 @@ export default function ManageAchieversModule() {
                                     <div className="w-24 h-24 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden border-4 border-white shadow-lg">
                                         {editForm.image ? (
                                             <img src={URL.createObjectURL(editForm.image)} alt="Preview" className="w-full h-full object-cover" />
+                                        ) : getAchieverImageUrl(editModal.achiever.image_path, editModal.achiever.id) ? (
+                                            <img src={getAchieverImageUrl(editModal.achiever.image_path, editModal.achiever.id)!} alt={editModal.achiever.name} className="w-full h-full object-cover" />
                                         ) : (
-                                            <img src={getAchieverImageUrl(editModal.achiever.image_path)} alt={editModal.achiever.name} className="w-full h-full object-cover" />
+                                            <Users className="w-12 h-12 text-gray-400" />
                                         )}
                                     </div>
                                     <label className="cursor-pointer">
@@ -292,7 +298,11 @@ export default function ManageAchieversModule() {
                             <div key={achiever.id} className="bg-white rounded-xl overflow-hidden shadow-md border border-gray-100">
                                 <div className="relative bg-gray-50 pt-6 pb-8 px-4">
                                     <div className="relative w-28 h-28 mx-auto">
-                                        <img src={getAchieverImageUrl(achiever.image_path)} alt={achiever.name} className="w-full h-full object-cover rounded-full border-4 border-white shadow-lg" />
+                                        {getAchieverImageUrl(achiever.image_path, achiever.id) ? (
+                                            <img src={getAchieverImageUrl(achiever.image_path, achiever.id)!} alt={achiever.name} className="w-full h-full object-cover rounded-full border-4 border-white shadow-lg" />
+                                        ) : (
+                                            <div className="w-full h-full rounded-full bg-gray-200 flex items-center justify-center border-4 border-white shadow-lg"><Users className="w-12 h-12 text-gray-400" /></div>
+                                        )}
                                         <div className="absolute -bottom-1 -right-1 w-8 h-8 rounded-full bg-[#c41e3a] flex items-center justify-center shadow-lg border-2 border-white"><Trophy className="w-4 h-4 text-white" /></div>
                                     </div>
                                     <div className="absolute top-3 right-3 bg-[#f7c52d] text-[#c41e3a] px-2 py-0.5 text-xs font-bold rounded">{achiever.year}</div>

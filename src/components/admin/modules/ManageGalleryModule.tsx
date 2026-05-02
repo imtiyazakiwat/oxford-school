@@ -121,7 +121,11 @@ export default function ManageGalleryModule() {
                                 <div><h3 className="text-lg font-semibold text-gray-900">Delete Image</h3><p className="text-sm text-gray-500">This action cannot be undone</p></div>
                             </div>
                             <div className="bg-gray-50 rounded-lg p-4 mb-6">
-                                <img src={getGalleryImageUrl(deleteModal.image.image_path)} alt={deleteModal.image.title} className="w-full h-32 object-cover rounded-lg mb-2" />
+                                {getGalleryImageUrl(deleteModal.image.image_path, deleteModal.image.id) ? (
+                                    <img src={getGalleryImageUrl(deleteModal.image.image_path, deleteModal.image.id)!} alt={deleteModal.image.title} className="w-full h-32 object-cover rounded-lg mb-2" />
+                                ) : (
+                                    <div className="w-full h-32 bg-gray-200 flex items-center justify-center rounded-lg mb-2"><Image className="w-8 h-8 text-gray-400" /></div>
+                                )}
                                 <p className="font-medium text-gray-900">{deleteModal.image.title}</p>
                                 <p className="text-sm text-gray-500">{deleteModal.image.category}</p>
                             </div>
@@ -219,33 +223,53 @@ export default function ManageGalleryModule() {
                     </div>
                 ) : (
                     <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-                        {filteredImages.map(image => (
-                            <div key={image.id} className="relative group rounded-lg overflow-hidden bg-gray-100">
-                                <img src={getGalleryImageUrl(image.image_path)} alt={image.title} className="w-full h-40 object-cover" />
-                                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/50 transition-colors" />
+                        {filteredImages.map((image) => {
+                            const imageUrl = getGalleryImageUrl(image.image_path, image.id);
+                            return (
+                                <div key={image.id} className="relative group rounded-lg overflow-hidden bg-gray-100">
+                                    {imageUrl ? (
+                                        <img src={imageUrl} alt={image.title} className="w-full h-40 object-cover" />
+                                    ) : (
+                                        <div className="w-full h-40 bg-gray-200 flex items-center justify-center">
+                                            <Image className="w-10 h-10 text-gray-400" />
+                                        </div>
+                                    )}
+                                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/50 transition-colors" />
                                 
-                                {/* Category Badge */}
-                                <div className="absolute top-2 left-2 bg-slate-800 text-white px-2 py-0.5 text-xs font-medium rounded">{image.category}</div>
-                                
-                                {/* Featured Badge */}
-                                {image.is_featured && (
-                                    <div className="absolute top-2 right-2 bg-yellow-500 text-white p-1 rounded-full"><Star className="w-3 h-3 fill-white" /></div>
-                                )}
-                                
-                                {/* Hover Actions */}
-                                <div className="absolute bottom-0 left-0 right-0 p-2 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
-                                    <p className="text-white text-sm font-medium truncate mb-2">{image.title}</p>
-                                    <div className="flex gap-1">
-                                        <button onClick={() => handleToggleFeatured(image)} className={`flex-1 flex items-center justify-center gap-1 px-2 py-1 rounded text-xs font-medium transition-colors ${image.is_featured ? "bg-yellow-500 text-white" : "bg-white/20 text-white hover:bg-white/30"}`}>
-                                            <Star className={`w-3 h-3 ${image.is_featured ? "fill-white" : ""}`} />{image.is_featured ? "Featured" : "Feature"}
-                                        </button>
-                                        <button onClick={() => setDeleteModal({ show: true, image })} className="px-2 py-1 rounded text-xs font-medium bg-red-500/80 text-white hover:bg-red-600 transition-colors">
-                                            <Trash2 className="w-3 h-3" />
-                                        </button>
+                                    {/* Category Badge */}
+                                    <div className="absolute top-2 left-2 bg-slate-800 text-white px-2 py-0.5 text-xs font-medium rounded">
+                                        {image.category}
+                                    </div>
+                                    
+                                    {/* Featured Badge */}
+                                    {image.is_featured && (
+                                        <div className="absolute top-2 right-2 bg-yellow-500 text-white p-1 rounded-full">
+                                            <Star className="w-3 h-3 fill-white" />
+                                        </div>
+                                    )}
+                                    
+                                    {/* Hover Actions */}
+                                    <div className="absolute bottom-0 left-0 right-0 p-2 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <p className="text-white text-sm font-medium truncate mb-2">{image.title}</p>
+                                        <div className="flex gap-1">
+                                            <button 
+                                                onClick={() => handleToggleFeatured(image)} 
+                                                className={`flex-1 flex items-center justify-center gap-1 px-2 py-1 rounded text-xs font-medium transition-colors ${image.is_featured ? "bg-yellow-500 text-white" : "bg-white/20 text-white hover:bg-white/30"}`}
+                                            >
+                                                <Star className={`w-3 h-3 ${image.is_featured ? "fill-white" : ""}`} />
+                                                {image.is_featured ? "Featured" : "Feature"}
+                                            </button>
+                                            <button 
+                                                onClick={() => setDeleteModal({ show: true, image })} 
+                                                className="px-2 py-1 rounded text-xs font-medium bg-red-500/80 text-white hover:bg-red-600 transition-colors"
+                                            >
+                                                <Trash2 className="w-3 h-3" />
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        ))}
+                            );
+                        })}
                     </div>
                 )}
             </div>

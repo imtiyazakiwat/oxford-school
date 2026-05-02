@@ -4,7 +4,6 @@ import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "motion/react";
 import { Menu, X, User, LayoutDashboard, LogOut } from "lucide-react";
-import AuthModal from "./AuthModal";
 import { useAuth } from "@/context/AuthContext";
 import { getAdmissionBanner } from "@/firebase/admissionBanner";
 
@@ -180,10 +179,6 @@ export default function Navbar({ onLoginSuccess }: NavbarProps) {
                     )}
                   </AnimatePresence>
                 </div>
-              ) : (
-                <button onClick={() => openAuth("signin")} className="btn-primary">
-                  Login
-                </button>
               )}
             </div>
 
@@ -253,27 +248,12 @@ export default function Navbar({ onLoginSuccess }: NavbarProps) {
                       {link.name}
                     </a>
                   ))}
-                  {!isLoggedIn && (
-                    <div className="pt-4 px-4">
-                      <button onClick={() => openAuth("signin")} className="btn-primary w-full">
-                        Login
-                      </button>
-                    </div>
-                  )}
                 </div>
               </motion.div>
             )}
           </AnimatePresence>
         </nav>
       </motion.header>
-
-      <AuthModal
-        isOpen={showAuth}
-        onClose={() => setShowAuth(false)}
-        mode={authMode}
-        onModeChange={setAuthMode}
-        onLoginSuccess={handleLoginSuccess}
-      />
     </>
   );
 }

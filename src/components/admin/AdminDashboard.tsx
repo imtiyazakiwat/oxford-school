@@ -9,11 +9,23 @@ import {
     Menu,
     X,
     ClipboardList,
+    MessageSquare,
+    Newspaper,
+    Image,
+    Trophy,
+    FileText,
+    Users,
 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import {
     DashboardOverview,
     ExamRegistrationsModule,
+    ContactSubmissionsModule,
+    ManageNewsModule,
+    ManageGalleryModule,
+    ManageAchieversModule,
+    AdmissionsModule,
+    StudentsModule,
 } from "./modules";
 
 interface AdminDashboardProps {
@@ -22,11 +34,23 @@ interface AdminDashboardProps {
 
 type ActiveModule =
     | "dashboard"
-    | "exam-registrations";
+    | "exam-registrations"
+    | "contact-submissions"
+    | "news"
+    | "gallery"
+    | "achievers"
+    | "admissions"
+    | "students";
 
 const menuItems = [
     { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
     { id: "exam-registrations", label: "Exam Registrations", icon: ClipboardList },
+    { id: "contact-submissions", label: "Contact Submissions", icon: MessageSquare },
+    { id: "news", label: "Manage News", icon: Newspaper },
+    { id: "gallery", label: "Manage Gallery", icon: Image },
+    { id: "achievers", label: "Manage Achievers", icon: Trophy },
+    { id: "admissions", label: "Admissions", icon: FileText },
+    { id: "students", label: "Students", icon: Users },
 ];
 
 export default function AdminDashboard({ onLogout }: AdminDashboardProps) {
@@ -210,6 +234,12 @@ export default function AdminDashboard({ onLogout }: AdminDashboardProps) {
                             >
                                 {activeModule === "dashboard" && <DashboardOverview onNavigate={(module) => setActiveModule(module as ActiveModule)} />}
                                 {activeModule === "exam-registrations" && <ExamRegistrationsModule />}
+                                {activeModule === "contact-submissions" && <ContactSubmissionsModule />}
+                                {activeModule === "news" && <ManageNewsModule />}
+                                {activeModule === "gallery" && <ManageGalleryModule />}
+                                {activeModule === "achievers" && <ManageAchieversModule />}
+                                {activeModule === "admissions" && <AdmissionsModule />}
+                                {activeModule === "students" && <StudentsModule />}
                             </motion.div>
                         </AnimatePresence>
                     </div>

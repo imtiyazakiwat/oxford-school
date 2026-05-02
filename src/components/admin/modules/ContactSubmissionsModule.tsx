@@ -19,7 +19,9 @@ const STATUS_CONFIG = {
 
 const SUBJECT_LABELS: Record<string, string> = {
     admissions: "Admissions Inquiry",
-    academics: "Academic Information",
+    navodaya: "Navodaya Coaching",
+    sainik: "Sainik School Coaching",
+    hostel: "Hostel Facilities",
     fees: "Fee Structure",
     other: "Other",
 };
