@@ -285,19 +285,6 @@ export const MOCK_NEWS: NewsItem[] = [
     created_by: null,
   },
   {
-    id: "news-sharana-sanskriti-utsav",
-    title: "Sharana Sanskriti Utsav 2026 — Cultural Event Coverage",
-    description: "Udayavani covered the Sharana Sanskriti Utsav 2026, a cultural event organized at Telsang village highlighting the values of education and culture.",
-    content: "The Sharana Sanskriti Utsav 2026 was inaugurated at Sri Siddarameshwar Mutt in Telsang. Veereshwara Devaru spoke about the importance of culture and family values. The event runs from April 2 to later dates with evening programs. The coaching institution's role in community development was recognised.",
-    image_path: null,
-    category: "Events",
-    is_featured: false,
-    is_active: true,
-    published_at: "2026-04-02T00:00:00.000Z",
-    created_at: "2026-04-02T00:00:00.000Z",
-    created_by: null,
-  },
-  {
     id: "news-admissions-2026-27",
     title: "Admissions Open for 2026-27 — Limited Seats!",
     description: "Coaching for Navodaya, Sainik School, Adarsha Vidyalaya, Kittur, Murarji & R.M.S. entrance exams. Classes for 4th and 5th standard students in English & Kannada medium. Summer batch from April, regular from June.",
@@ -344,7 +331,6 @@ export const MOCK_NEWS_IMAGES: Record<string, string> = {
   "news-sainik-results-2026": "/img/congactulations/WhatsApp Image 2026-04-22 at 17.09.37.jpeg", // Sainik 68→64 results poster
   "news-kittur-results-2026": "/img/congactulations/congracts5.jpeg",         // Felicitation with Kittur selections
   "news-felicitation-ceremony": "/img/newspaper/news1.jpeg",                  // Udayavani felicitation coverage
-  "news-sharana-sanskriti-utsav": "/img/newspaper/news7.jpeg",                // Udayavani cultural event coverage
   "news-admissions-2026-27": "/img/admissions/admission3.jpeg",               // 2026-27 admissions poster
 };
 
@@ -478,7 +464,6 @@ export const MOCK_GALLERY: GalleryImage[] = [
   { id: "gal-event-2", title: "Smart Watch Distribution Ceremony", category: "Events", image_path: "", is_featured: true, display_order: 2, created_at: new Date().toISOString(), created_by: null },
   { id: "gal-event-3", title: "Felicitation Coverage — Udayavani", category: "Events", image_path: "", is_featured: true, display_order: 3, created_at: new Date().toISOString(), created_by: null },
   { id: "gal-event-4", title: "Felicitation Poster — Udayavani", category: "Events", image_path: "", is_featured: true, display_order: 4, created_at: new Date().toISOString(), created_by: null },
-  { id: "gal-event-5", title: "Sharana Sanskriti Utsav Coverage", category: "Events", image_path: "", is_featured: true, display_order: 5, created_at: new Date().toISOString(), created_by: null },
   { id: "gal-event-6", title: "Sainik School Results Poster", category: "Events", image_path: "", is_featured: true, display_order: 6, created_at: new Date().toISOString(), created_by: null },
   // Achievements — student results (congactulations/)
   { id: "gal-achieve-1", title: "Navodaya + Kittur Selections 2026-27", category: "Achievements", image_path: "", is_featured: false, display_order: 7, created_at: new Date().toISOString(), created_by: null },
@@ -501,7 +486,6 @@ export const MOCK_GALLERY_IMAGES: Record<string, string> = {
   "gal-event-2": "/img/congactulations/congracts6.jpeg",     // Felicitation + smart watch distribution
   "gal-event-3": "/img/newspaper/news1.jpeg",                // Udayavani felicitation coverage
   "gal-event-4": "/img/newspaper/news5.jpeg",                // Udayavani felicitation poster
-  "gal-event-5": "/img/newspaper/news7.jpeg",                // Udayavani cultural event
   "gal-event-6": "/img/congactulations/WhatsApp Image 2026-04-22 at 17.09.37.jpeg", // Sainik results poster
   // Achievements — student results from congactulations/
   "gal-achieve-1": "/img/congactulations/congracts2.jpeg",    // Navodaya + Kittur selections

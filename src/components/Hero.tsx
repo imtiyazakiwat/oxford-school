@@ -22,14 +22,6 @@ export default function Hero({ onExamRegisterClick }: HeroProps) {
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 py-16 sm:py-20 flex items-center md:items-end min-h-[100vh] md:min-h-[85vh] pb-48 sm:pb-44 md:pb-32">
         <div className="max-w-2xl w-full">
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-[#f7c52d] font-semibold mb-3 sm:mb-4 tracking-wide text-xs sm:text-sm"
-          >
-            NEW OXFORD COACHING CLASSES — JAMKHANDI & ATHANI
-          </motion.p>
-
           <motion.h1
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
