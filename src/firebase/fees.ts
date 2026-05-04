@@ -259,9 +259,11 @@ export async function getFeeRecords(filters?: FeeRecordFilters) {
 export async function getPaymentsByStudent(studentId: string) {
   if (!isConfigured || !db) return { data: [], error: null };
   try {
-    const q = query(collection(db, "fee_payments"), where("student_id", "==", studentId), orderBy("payment_date", "desc"));
-    const snap = await getDocs(q);
-    return { data: snap.docs.map(d => ({ id: d.id, ...d.data() })) as FeePayment[], error: null };
+    const snap = await getDocs(collection(db, "fee_payments"));
+    const data = (snap.docs.map(d => ({ id: d.id, ...d.data() })) as FeePayment[])
+      .filter(p => p.student_id === studentId)
+      .sort((a, b) => new Date(b.payment_date).getTime() - new Date(a.payment_date).getTime());
+    return { data, error: null };
   } catch (err) { return { data: [], error: err instanceof Error ? err.message : "Fetch failed" }; }
 }
 

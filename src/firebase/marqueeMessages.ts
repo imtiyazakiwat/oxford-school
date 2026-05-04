@@ -1,6 +1,5 @@
 import { db, isConfigured } from "./firebase";
 import { collection, doc, getDocs, getDoc, addDoc, updateDoc, deleteDoc, query, orderBy, Timestamp } from "firebase/firestore";
-import { MOCK_MARQUEE_MESSAGES } from "@/data/mockData";
 import type { MarqueeMessage } from "@/data/mockData";
 
 export type { MarqueeMessage };
@@ -20,22 +19,23 @@ function docToMarquee(d: { id: string; data: () => Record<string, unknown> }): M
 }
 
 export async function getActiveMarqueeMessages(): Promise<{ data: MarqueeMessage[]; error: string | null }> {
-  if (!isConfigured || !db) return { data: MOCK_MARQUEE_MESSAGES, error: null };
+  if (!isConfigured || !db) return { data: [], error: "Firebase not configured" };
   try {
-    const q = query(collection(db, COLLECTION), orderBy("display_order", "asc"));
-    const snap = await getDocs(q);
-    const data = snap.docs.map(d => docToMarquee({ id: d.id, data: () => d.data() as Record<string, unknown> })).filter(m => m.is_active);
-    if (data.length === 0) return { data: MOCK_MARQUEE_MESSAGES, error: null };
+    const snap = await getDocs(collection(db, COLLECTION));
+    const data = snap.docs.map(d => docToMarquee({ id: d.id, data: () => d.data() as Record<string, unknown> }))
+      .filter(m => m.is_active)
+      .sort((a, b) => a.display_order - b.display_order);
     return { data, error: null };
-  } catch { return { data: MOCK_MARQUEE_MESSAGES, error: null }; }
+  } catch (err) { return { data: [], error: err instanceof Error ? err.message : "Fetch failed" }; }
 }
 
 export async function getAllMarqueeMessages(): Promise<{ data: MarqueeMessage[]; error: string | null }> {
   if (!isConfigured || !db) return { data: [], error: null };
   try {
-    const q = query(collection(db, COLLECTION), orderBy("display_order", "asc"));
-    const snap = await getDocs(q);
-    return { data: snap.docs.map(d => docToMarquee({ id: d.id, data: () => d.data() as Record<string, unknown> })), error: null };
+    const snap = await getDocs(collection(db, COLLECTION));
+    const data = snap.docs.map(d => docToMarquee({ id: d.id, data: () => d.data() as Record<string, unknown> }))
+      .sort((a, b) => a.display_order - b.display_order);
+    return { data, error: null };
   } catch (err) { return { data: [], error: err instanceof Error ? err.message : "Fetch failed" }; }
 }
 

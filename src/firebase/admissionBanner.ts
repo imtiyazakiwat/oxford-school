@@ -1,6 +1,5 @@
 import { db, isConfigured } from "./firebase";
 import { collection, doc, getDocs, getDoc, setDoc, query, where, orderBy, limit, Timestamp } from "firebase/firestore";
-import { MOCK_ADMISSION_BANNER } from "@/data/mockData";
 import type { AdmissionBanner } from "@/data/mockData";
 
 export type { AdmissionBanner };
@@ -18,13 +17,13 @@ function docToBanner(d: { id: string; data: () => Record<string, unknown> }): Ad
 }
 
 export async function getAdmissionBanner(): Promise<{ data: AdmissionBanner | null; error: string | null }> {
-  if (!isConfigured || !db) return { data: MOCK_ADMISSION_BANNER, error: null };
+  if (!isConfigured || !db) return { data: null, error: "Firebase not configured" };
   try {
     const q = query(collection(db, COLLECTION), where("is_active", "==", true), limit(1));
     const snap = await getDocs(q);
-    if (snap.empty) return { data: MOCK_ADMISSION_BANNER, error: null };
+    if (snap.empty) return { data: null, error: null };
     return { data: docToBanner({ id: snap.docs[0].id, data: () => snap.docs[0].data() as Record<string, unknown> }), error: null };
-  } catch { return { data: MOCK_ADMISSION_BANNER, error: null }; }
+  } catch (err) { return { data: null, error: err instanceof Error ? err.message : "Fetch failed" }; }
 }
 
 export async function updateAdmissionBanner(id: string, updates: Partial<Omit<AdmissionBanner, "id">>): Promise<{ data: AdmissionBanner | null; error: string | null }> {
@@ -39,7 +38,7 @@ export async function updateAdmissionBanner(id: string, updates: Partial<Omit<Ad
 }
 
 export async function getOrCreateAdmissionBanner(): Promise<{ data: AdmissionBanner | null; error: string | null }> {
-  if (!isConfigured || !db) return { data: MOCK_ADMISSION_BANNER, error: null };
+  if (!isConfigured || !db) return { data: null, error: "Firebase not configured" };
   try {
     const q = query(collection(db, COLLECTION), limit(1));
     const snap = await getDocs(q);

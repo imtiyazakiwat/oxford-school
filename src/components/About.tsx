@@ -33,10 +33,10 @@ const features = [
 ];
 
 const FALLBACK_IMAGES = [
-  { position: 1, src: "/img/congactulations/congracts5.jpeg", alt: "Student Felicitation" },
-  { position: 2, src: "/img/congactulations/congracts6.jpeg", alt: "Achievement Ceremony" },
-  { position: 3, src: "/img/admissions/admission4.jpeg", alt: "Campus & Students" },
-  { position: 4, src: "/img/congactulations/congracts7.jpeg", alt: "Results Celebration" },
+  { position: 1, src: "", alt: "Student Felicitation" },
+  { position: 2, src: "", alt: "Achievement Ceremony" },
+  { position: 3, src: "", alt: "Campus & Students" },
+  { position: 4, src: "", alt: "Results Celebration" },
 ];
 
 export default function About() {
@@ -58,6 +58,12 @@ export default function About() {
   }, []);
 
   const getImage = (position: number) => images.find(img => img.position === position) || FALLBACK_IMAGES[position - 1];
+
+  const AboutImg = ({ position, className }: { position: number; className: string }) => {
+    const img = getImage(position);
+    if (!img.src) return <div className={`${className} bg-gray-200`} />;
+    return <img src={img.src} alt={img.alt} className={className} />;
+  };
 
   return (
     <section id="about" className="py-12 sm:py-16 md:py-20 bg-white">
@@ -115,28 +121,12 @@ export default function About() {
           >
             <div className="grid grid-cols-2 gap-3 sm:gap-4">
               <div className="space-y-3 sm:space-y-4">
-                <img
-                  src={getImage(1).src}
-                  alt={getImage(1).alt}
-                  className="w-full h-32 sm:h-40 md:h-48 object-cover rounded-lg"
-                />
-                <img
-                  src={getImage(2).src}
-                  alt={getImage(2).alt}
-                  className="w-full h-44 sm:h-52 md:h-64 object-cover rounded-lg"
-                />
+                <AboutImg position={1} className="w-full h-32 sm:h-40 md:h-48 object-cover rounded-lg" />
+                <AboutImg position={2} className="w-full h-44 sm:h-52 md:h-64 object-cover rounded-lg" />
               </div>
               <div className="space-y-3 sm:space-y-4 pt-6 sm:pt-8">
-                <img
-                  src={getImage(3).src}
-                  alt={getImage(3).alt}
-                  className="w-full h-44 sm:h-52 md:h-64 object-cover rounded-lg"
-                />
-                <img
-                  src={getImage(4).src}
-                  alt={getImage(4).alt}
-                  className="w-full h-32 sm:h-40 md:h-48 object-cover rounded-lg"
-                />
+                <AboutImg position={3} className="w-full h-44 sm:h-52 md:h-64 object-cover rounded-lg" />
+                <AboutImg position={4} className="w-full h-32 sm:h-40 md:h-48 object-cover rounded-lg" />
               </div>
             </div>
             {/* Accent */}

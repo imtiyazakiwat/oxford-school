@@ -2,11 +2,9 @@ import { db, storage, isConfigured } from "./firebase";
 import { collection, doc, getDocs, getDoc, addDoc, updateDoc, deleteDoc, query, where, orderBy, limit, Timestamp } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage";
 import { compressImage, generateFileName } from "@/utils/imageUtils";
-import { MOCK_NEWS, MOCK_NEWS_IMAGE, MOCK_NEWS_IMAGES } from "@/data/mockData";
 import type { NewsItem, NewsInput } from "@/data/mockData";
 
 export type { NewsItem, NewsInput };
-export { MOCK_NEWS_IMAGES };
 
 const COLLECTION = "news";
 const STORAGE_FOLDER = "news";
@@ -72,20 +70,23 @@ export async function uploadNewsImage(file: File, userId: string): Promise<{ pat
 
 /** Get download URL for news image */
 export function getNewsImageUrl(imagePath: string): string {
-  if (!imagePath || !isConfigured || !storage) return MOCK_NEWS_IMAGE;
-  // For Firebase Storage paths, we need to get the download URL asynchronously
-  // But since this function is sync, we return a placeholder and let components handle async
+  if (!imagePath) return "";
+  // Local images from public/
+  if (imagePath.startsWith("/")) return imagePath;
+  if (!isConfigured || !storage) return "";
   return `https://firebasestorage.googleapis.com/v0/b/${process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET}/o/${encodeURIComponent(imagePath)}?alt=media`;
 }
 
 /** Get async download URL for news image */
 export async function getNewsImageUrlAsync(imagePath: string): Promise<string> {
-  if (!imagePath || !isConfigured || !storage) return MOCK_NEWS_IMAGE;
+  if (!imagePath) return "";
+  if (imagePath.startsWith("/")) return imagePath;
+  if (!isConfigured || !storage) return "";
   try {
     const storageRef = ref(storage, imagePath);
     return await getDownloadURL(storageRef);
   } catch {
-    return MOCK_NEWS_IMAGE;
+    return "";
   }
 }
 
@@ -109,66 +110,65 @@ export async function createNews(input: NewsInput, imagePath: string | null, use
 /** Get all news (for admin) */
 export async function getAllNews(skipCache = false): Promise<{ data: NewsItem[]; error: string | null }> {
   if (!skipCache) { const cached = getFromCache<NewsItem[]>(CACHE_KEYS.ALL_NEWS); if (cached) return { data: cached, error: null }; }
-  if (!isConfigured || !db) return { data: MOCK_NEWS, error: null };
+  if (!isConfigured || !db) return { data: [], error: "Firebase not configured" };
   try {
-    const q = query(collection(db, COLLECTION), orderBy("published_at", "desc"));
-    const snap = await getDocs(q);
-    if (snap.empty) return { data: MOCK_NEWS, error: null };
+    const snap = await getDocs(collection(db, COLLECTION));
     const data = snap.docs.map(d => docToNewsItem({ id: d.id, data: () => d.data() as Record<string, unknown> }));
+    data.sort((a, b) => new Date(b.published_at).getTime() - new Date(a.published_at).getTime());
     saveToCache(CACHE_KEYS.ALL_NEWS, data);
     return { data, error: null };
-  } catch { return { data: MOCK_NEWS, error: null }; }
+  } catch (err) { return { data: [], error: err instanceof Error ? err.message : "Fetch failed" }; }
 }
 
 /** Get active news */
 export async function getActiveNews(skipCache = false): Promise<{ data: NewsItem[]; error: string | null }> {
   if (!skipCache) { const cached = getFromCache<NewsItem[]>(CACHE_KEYS.ACTIVE_NEWS); if (cached) return { data: cached, error: null }; }
-  if (!isConfigured || !db) return { data: MOCK_NEWS, error: null };
+  if (!isConfigured || !db) return { data: [], error: "Firebase not configured" };
   try {
-    const q = query(collection(db, COLLECTION), where("is_active", "==", true), orderBy("published_at", "desc"));
-    const snap = await getDocs(q);
-    if (snap.empty) return { data: MOCK_NEWS, error: null };
-    const data = snap.docs.map(d => docToNewsItem({ id: d.id, data: () => d.data() as Record<string, unknown> }));
+    const snap = await getDocs(collection(db, COLLECTION));
+    const data = snap.docs.map(d => docToNewsItem({ id: d.id, data: () => d.data() as Record<string, unknown> }))
+      .filter(n => n.is_active)
+      .sort((a, b) => new Date(b.published_at).getTime() - new Date(a.published_at).getTime());
     saveToCache(CACHE_KEYS.ACTIVE_NEWS, data);
     return { data, error: null };
-  } catch { return { data: MOCK_NEWS, error: null }; }
+  } catch (err) { return { data: [], error: err instanceof Error ? err.message : "Fetch failed" }; }
 }
 
 /** Get featured news for homepage */
 export async function getFeaturedNews(skipCache = false): Promise<{ data: NewsItem[]; error: string | null }> {
   if (!skipCache) { const cached = getFromCache<NewsItem[]>(CACHE_KEYS.FEATURED_NEWS); if (cached) return { data: cached, error: null }; }
-  if (!isConfigured || !db) return { data: MOCK_NEWS, error: null };
+  if (!isConfigured || !db) return { data: [], error: "Firebase not configured" };
   try {
-    const q = query(collection(db, COLLECTION), where("is_active", "==", true), where("is_featured", "==", true), orderBy("published_at", "desc"), limit(3));
-    const snap = await getDocs(q);
-    if (snap.empty) return { data: MOCK_NEWS, error: null };
-    const data = snap.docs.map(d => docToNewsItem({ id: d.id, data: () => d.data() as Record<string, unknown> }));
+    const snap = await getDocs(collection(db, COLLECTION));
+    const data = snap.docs.map(d => docToNewsItem({ id: d.id, data: () => d.data() as Record<string, unknown> }))
+      .filter(n => n.is_active && n.is_featured)
+      .sort((a, b) => new Date(b.published_at).getTime() - new Date(a.published_at).getTime())
+      .slice(0, 3);
     saveToCache(CACHE_KEYS.FEATURED_NEWS, data);
     return { data, error: null };
-  } catch { return { data: MOCK_NEWS, error: null }; }
+  } catch (err) { return { data: [], error: err instanceof Error ? err.message : "Fetch failed" }; }
 }
 
-/** Get news by ID (with mock data fallback) */
+/** Get news by ID */
 export async function getNewsById(id: string): Promise<{ data: NewsItem | null; error: string | null }> {
-  if (isConfigured && db) {
-    try {
-      const docRef = doc(db, COLLECTION, id);
-      const snap = await getDoc(docRef);
-      if (snap.exists()) return { data: docToNewsItem({ id: snap.id, data: () => snap.data() as Record<string, unknown> }), error: null };
-    } catch {}
-  }
-  const mockItem = MOCK_NEWS.find(item => item.id === id);
-  if (mockItem) return { data: mockItem, error: null };
-  return { data: null, error: "News not found" };
+  if (!isConfigured || !db) return { data: null, error: "Firebase not configured" };
+  try {
+    const docRef = doc(db, COLLECTION, id);
+    const snap = await getDoc(docRef);
+    if (snap.exists()) return { data: docToNewsItem({ id: snap.id, data: () => snap.data() as Record<string, unknown> }), error: null };
+    return { data: null, error: "News not found" };
+  } catch (err) { return { data: null, error: err instanceof Error ? err.message : "Fetch failed" }; }
 }
 
 /** Get news by category */
 export async function getNewsByCategory(category: string): Promise<{ data: NewsItem[]; error: string | null }> {
-  if (!isConfigured || !db) return { data: MOCK_NEWS.filter(n => n.category === category), error: null };
+  if (!isConfigured || !db) return { data: [], error: "Firebase not configured" };
   try {
-    const q = query(collection(db, COLLECTION), where("category", "==", category), where("is_active", "==", true), orderBy("published_at", "desc"));
-    const snap = await getDocs(q);
-    return { data: snap.docs.map(d => docToNewsItem({ id: d.id, data: () => d.data() as Record<string, unknown> })), error: null };
+    const snap = await getDocs(collection(db, COLLECTION));
+    const data = snap.docs.map(d => docToNewsItem({ id: d.id, data: () => d.data() as Record<string, unknown> }))
+      .filter(n => n.category === category && n.is_active)
+      .sort((a, b) => new Date(b.published_at).getTime() - new Date(a.published_at).getTime());
+    return { data, error: null };
   } catch { return { data: [], error: "Failed to fetch news" }; }
 }
 

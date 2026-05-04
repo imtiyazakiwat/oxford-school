@@ -4,7 +4,7 @@ import { useState, useEffect, useMemo, useRef } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Trophy, ArrowUpDown, Calendar, Award, ChevronLeft, ChevronRight } from "lucide-react";
 import Link from "next/link";
-import { getAllAchievers, getAchieverImageUrl, getMockAchieverImage, Achiever } from "@/firebase/achievers";
+import { getAllAchievers, getAchieverImageUrl, Achiever } from "@/firebase/achievers";
 
 const categories = ["All", "Navodaya", "Sainik", "Adarsha", "Morarji", "Kittur", "Others"];
 const ITEMS_PER_PAGE = 9;
@@ -233,12 +233,6 @@ export default function AchieversPage() {
                                                 {achiever.image_path ? (
                                                     <img
                                                         src={getAchieverImageUrl(achiever.image_path, achiever.id)!}
-                                                        alt={achiever.name}
-                                                        className="w-full h-full object-cover rounded-full border-4 border-white shadow-lg"
-                                                    />
-                                                ) : achiever.id.startsWith("mock-") ? (
-                                                    <img
-                                                        src={getMockAchieverImage(achiever.id)}
                                                         alt={achiever.name}
                                                         className="w-full h-full object-cover rounded-full border-4 border-white shadow-lg"
                                                     />

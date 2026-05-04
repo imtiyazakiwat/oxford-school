@@ -1,8 +1,22 @@
 "use client";
 
-import { School, Bell, Shield, Database } from "lucide-react";
+import { useState } from "react";
+import { School, Bell, Shield, Database, Upload, CheckCircle, AlertCircle } from "lucide-react";
+import { seedAllData } from "@/firebase/seedData";
 
 export default function SettingsModule() {
+    const [seeding, setSeeding] = useState(false);
+    const [seedResult, setSeedResult] = useState<{ results: string[]; errors: string[] } | null>(null);
+
+    const handleSeed = async () => {
+        if (!confirm("This will push all default data to Firebase. Existing collections with data will be skipped. Continue?")) return;
+        setSeeding(true);
+        setSeedResult(null);
+        const result = await seedAllData();
+        setSeedResult(result);
+        setSeeding(false);
+    };
+
     return (
         <div className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -89,22 +103,34 @@ export default function SettingsModule() {
                     </div>
                 </div>
 
-                {/* Backup Settings */}
+                {/* Backup & Seed Data */}
                 <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
                     <h3 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
                         <Database className="w-5 h-5 text-[#c41e3a]" />
                         Backup & Data
                     </h3>
                     <div className="space-y-4">
-                        <div className="p-4 bg-gray-50 rounded-lg">
-                            <p className="text-sm text-gray-600">Last backup: December 14, 2024</p>
-                        </div>
-                        <button className="w-full px-4 py-2 bg-[#c41e3a] text-white rounded-lg hover:bg-[#a81832]">
-                            Create Backup Now
+                        <button
+                            onClick={handleSeed}
+                            disabled={seeding}
+                            className="w-full px-4 py-2 bg-[#c41e3a] text-white rounded-lg hover:bg-[#a81832] disabled:opacity-50 flex items-center justify-center gap-2"
+                        >
+                            {seeding ? (
+                                <><div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" /> Seeding Data...</>
+                            ) : (
+                                <><Upload className="w-4 h-4" /> Seed Default Data to Firebase</>
+                            )}
                         </button>
-                        <button className="w-full px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
-                            Export All Data
-                        </button>
+                        {seedResult && (
+                            <div className="space-y-2">
+                                {seedResult.results.map((r, i) => (
+                                    <p key={i} className="text-sm text-green-700 flex items-center gap-1"><CheckCircle className="w-3.5 h-3.5" /> {r}</p>
+                                ))}
+                                {seedResult.errors.map((e, i) => (
+                                    <p key={i} className="text-sm text-red-600 flex items-center gap-1"><AlertCircle className="w-3.5 h-3.5" /> {e}</p>
+                                ))}
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>

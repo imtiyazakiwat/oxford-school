@@ -68,9 +68,9 @@ export async function getAllAnnouncements(skipCache = false): Promise<{ data: An
   if (!skipCache) { const cached = getFromCache<Announcement[]>(CACHE_KEYS.ALL); if (cached) return { data: cached, error: null }; }
   if (!isConfigured || !db) return { data: [], error: null };
   try {
-    const q = query(collection(db, COLLECTION), orderBy("created_at", "desc"));
-    const snap = await getDocs(q);
+    const snap = await getDocs(collection(db, COLLECTION));
     const data = snap.docs.map(d => docToAnnouncement({ id: d.id, data: () => d.data() as Record<string, unknown> }));
+    data.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
     if (data.length > 0) saveToCache(CACHE_KEYS.ALL, data);
     return { data, error: null };
   } catch (err) { return { data: [], error: err instanceof Error ? err.message : "Fetch failed" }; }
@@ -80,9 +80,9 @@ export async function getActiveAnnouncements(skipCache = false): Promise<{ data:
   if (!skipCache) { const cached = getFromCache<Announcement[]>(CACHE_KEYS.ACTIVE); if (cached) return { data: cached, error: null }; }
   if (!isConfigured || !db) return { data: [], error: null };
   try {
-    const q = query(collection(db, COLLECTION), where("is_active", "==", true), orderBy("created_at", "desc"));
-    const snap = await getDocs(q);
-    const data = snap.docs.map(d => docToAnnouncement({ id: d.id, data: () => d.data() as Record<string, unknown> }));
+    const snap = await getDocs(collection(db, COLLECTION));
+    const data = snap.docs.map(d => docToAnnouncement({ id: d.id, data: () => d.data() as Record<string, unknown> }))
+      .filter(a => a.is_active);
     const priorityOrder: Record<string, number> = { urgent: 0, high: 1, normal: 2, low: 3 };
     data.sort((a, b) => {
       const diff = (priorityOrder[a.priority] ?? 2) - (priorityOrder[b.priority] ?? 2);

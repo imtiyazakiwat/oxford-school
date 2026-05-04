@@ -2,7 +2,6 @@ import { db, storage, isConfigured } from "./firebase";
 import { collection, doc, getDocs, getDoc, addDoc, updateDoc, deleteDoc, query, where, orderBy, limit, Timestamp } from "firebase/firestore";
 import { ref, uploadBytes, deleteObject } from "firebase/storage";
 import { compressImage, generateFileName } from "@/utils/imageUtils";
-import { MOCK_ACHIEVERS, MOCK_ACHIEVER_IMAGES } from "@/data/mockData";
 import type { Achiever, AchieverInput } from "@/data/mockData";
 
 export type { Achiever, AchieverInput };
@@ -53,16 +52,15 @@ export async function uploadAchieverImage(file: File, userId: string): Promise<{
 }
 
 export function getAchieverImageUrl(imagePath: string, id?: string): string | null {
-  if (!imagePath || imagePath === "") {
-    if (id) return getMockAchieverImage(id);
-    return null;
-  }
-  if (!isConfigured || !storage) return getMockAchieverImage(id || "");
+  if (!imagePath || imagePath === "") return null;
+  // Local images from public/
+  if (imagePath.startsWith("/")) return imagePath;
+  if (!isConfigured || !storage) return null;
   return `https://firebasestorage.googleapis.com/v0/b/${process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET}/o/${encodeURIComponent(imagePath)}?alt=media`;
 }
 
 export function getMockAchieverImage(id: string): string {
-  return MOCK_ACHIEVER_IMAGES[id] || "/img/congactulations/congracts2.jpeg";
+  return "/img/congactulations/congracts2.jpeg";
 }
 
 export async function createAchiever(input: AchieverInput, imagePath: string, userId: string): Promise<{ data: Achiever | null; error: string | null }> {
@@ -78,28 +76,28 @@ export async function createAchiever(input: AchieverInput, imagePath: string, us
 
 export async function getAllAchievers(skipCache = false): Promise<{ data: Achiever[]; error: string | null }> {
   if (!skipCache) { const cached = getFromCache<Achiever[]>(CACHE_KEYS.ALL); if (cached) return { data: cached, error: null }; }
-  if (!isConfigured || !db) return { data: MOCK_ACHIEVERS, error: null };
+  if (!isConfigured || !db) return { data: [], error: "Firebase not configured" };
   try {
-    const q = query(collection(db, COLLECTION), orderBy("year", "desc"), orderBy("created_at", "desc"));
-    const snap = await getDocs(q);
-    if (snap.empty) return { data: MOCK_ACHIEVERS, error: null };
+    const snap = await getDocs(collection(db, COLLECTION));
     const data = snap.docs.map(d => docToAchiever({ id: d.id, data: () => d.data() as Record<string, unknown> }));
+    data.sort((a, b) => b.year - a.year || new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
     saveToCache(CACHE_KEYS.ALL, data);
     return { data, error: null };
-  } catch { return { data: MOCK_ACHIEVERS, error: null }; }
+  } catch (err) { return { data: [], error: err instanceof Error ? err.message : "Fetch failed" }; }
 }
 
 export async function getFeaturedAchievers(skipCache = false): Promise<{ data: Achiever[]; error: string | null }> {
   if (!skipCache) { const cached = getFromCache<Achiever[]>(CACHE_KEYS.FEATURED); if (cached) return { data: cached, error: null }; }
-  if (!isConfigured || !db) return { data: MOCK_ACHIEVERS, error: null };
+  if (!isConfigured || !db) return { data: [], error: "Firebase not configured" };
   try {
-    const q = query(collection(db, COLLECTION), where("is_featured", "==", true), orderBy("display_order", "asc"), limit(6));
-    const snap = await getDocs(q);
-    if (snap.empty) return { data: MOCK_ACHIEVERS, error: null };
-    const data = snap.docs.map(d => docToAchiever({ id: d.id, data: () => d.data() as Record<string, unknown> }));
+    const snap = await getDocs(collection(db, COLLECTION));
+    const data = snap.docs.map(d => docToAchiever({ id: d.id, data: () => d.data() as Record<string, unknown> }))
+      .filter(a => a.is_featured)
+      .sort((a, b) => a.display_order - b.display_order)
+      .slice(0, 6);
     saveToCache(CACHE_KEYS.FEATURED, data);
     return { data, error: null };
-  } catch { return { data: MOCK_ACHIEVERS, error: null }; }
+  } catch (err) { return { data: [], error: err instanceof Error ? err.message : "Fetch failed" }; }
 }
 
 export async function updateAchiever(id: string, input: Partial<AchieverInput & { image_path?: string }>): Promise<{ data: Achiever | null; error: string | null }> {

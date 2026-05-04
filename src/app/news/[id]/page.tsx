@@ -5,7 +5,6 @@ import { motion } from "motion/react";
 import { Calendar, ArrowLeft, Newspaper } from "lucide-react";
 import Link from "next/link";
 import { getNewsById, getNewsImageUrl, NewsItem } from "@/firebase/news";
-import { MOCK_NEWS_IMAGES } from "@/data/mockData";
 
 export default function NewsDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
@@ -97,10 +96,10 @@ export default function NewsDetailPage({ params }: { params: Promise<{ id: strin
           transition={{ delay: 0.1 }}
           className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden"
         >
-          {(newsItem.image_path || MOCK_NEWS_IMAGES[newsItem.id]) ? (
+          {newsItem.image_path ? (
             <div className="w-full bg-gray-50 flex items-center justify-center p-4">
               <img
-                src={newsItem.image_path ? getNewsImageUrl(newsItem.image_path) : MOCK_NEWS_IMAGES[newsItem.id]}
+                src={getNewsImageUrl(newsItem.image_path)}
                 alt={newsItem.title}
                 className="w-full h-auto max-h-[32rem] object-contain"
               />

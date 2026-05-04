@@ -61,12 +61,14 @@ export async function getStudents(filters?: { class?: string; section?: string; 
     let q;
     if (constraints.length > 0) {
       const whereConstraints = constraints.map(c => where(c[0] as string, c[1] as any, c[2]));
-      q = query(collection(db, COLLECTION), ...whereConstraints, orderBy("created_at", "desc"));
+      q = query(collection(db, COLLECTION), ...whereConstraints);
     } else {
-      q = query(collection(db, COLLECTION), orderBy("created_at", "desc"));
+      q = query(collection(db, COLLECTION));
     }
     const snap = await getDocs(q);
-    return { data: snap.docs.map(d => docToStudent({ id: d.id, data: () => d.data() as Record<string, unknown> })), error: null };
+    const data = snap.docs.map(d => docToStudent({ id: d.id, data: () => d.data() as Record<string, unknown> }));
+    data.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+    return { data, error: null };
   } catch (err) { return { data: [], error: err instanceof Error ? err.message : "Fetch failed" }; }
 }
 

@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { X } from "lucide-react";
 import Link from "next/link";
-import { getFeaturedGalleryImages, getGalleryImageUrl, getMockGalleryImage } from "@/firebase/gallery";
+import { getFeaturedGalleryImages, getGalleryImageUrl } from "@/firebase/gallery";
 
 interface DisplayImage {
   id: string;

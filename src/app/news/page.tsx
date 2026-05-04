@@ -5,7 +5,6 @@ import { motion, AnimatePresence } from "motion/react";
 import { Calendar, ArrowRight, Newspaper, ChevronLeft, ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { getActiveNews, getNewsImageUrl, NewsItem } from "@/firebase/news";
-import { MOCK_NEWS_IMAGES } from "@/data/mockData";
 
 const categories = ["All", "Events", "Academic", "Admissions", "Sports", "Achievements"];
 const ITEMS_PER_PAGE = 6;
@@ -122,10 +121,6 @@ export default function NewsPage() {
                       {item.image_path ? (
                         <div className="w-full md:w-80 shrink-0 bg-gray-50 flex items-center justify-center p-2">
                           <img src={getNewsImageUrl(item.image_path)} alt={item.title} className="w-full h-auto max-h-64 md:max-h-72 object-contain" />
-                        </div>
-                      ) : MOCK_NEWS_IMAGES[item.id] ? (
-                        <div className="w-full md:w-80 shrink-0 bg-gray-50 flex items-center justify-center p-2">
-                          <img src={MOCK_NEWS_IMAGES[item.id]} alt={item.title} className="w-full h-auto max-h-64 md:max-h-72 object-contain" />
                         </div>
                       ) : (
                         <div className="w-full md:w-80 shrink-0 h-48 md:h-auto min-h-[12rem] bg-gray-100 flex items-center justify-center">

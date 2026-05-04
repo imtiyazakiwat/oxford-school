@@ -5,7 +5,6 @@ import { motion } from "motion/react";
 import { Calendar, ArrowRight, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { getFeaturedNews, getNewsImageUrl, NewsItem } from "@/firebase/news";
-import { MOCK_NEWS_IMAGES } from "@/data/mockData";
 
 const quickLinks = [
   { title: "Academic Calendar", href: "/academic-calendar" },
@@ -77,11 +76,17 @@ export default function Announcements({ onApplyClick }: { onApplyClick?: () => v
                     transition={{ delay: index * 0.1 }}
                     className="flex flex-col md:flex-row gap-6 bg-gray-50 rounded-lg overflow-hidden hover:shadow-lg transition-shadow"
                   >
-                    <img
-                      src={item.image_path ? getNewsImageUrl(item.image_path) : (MOCK_NEWS_IMAGES[item.id] || "/img/newspaper/news4.jpeg")}
-                      alt={item.title}
-                      className="w-full md:w-48 h-48 object-cover"
-                    />
+                    {item.image_path ? (
+                      <img
+                        src={getNewsImageUrl(item.image_path)}
+                        alt={item.title}
+                        className="w-full md:w-48 h-48 object-cover"
+                      />
+                    ) : (
+                      <div className="w-full md:w-48 h-48 bg-gray-200 flex items-center justify-center">
+                        <Calendar className="w-10 h-10 text-gray-400" />
+                      </div>
+                    )}
                     <div className="p-6 md:p-4 flex flex-col justify-center">
                       <div className="flex items-center gap-4 mb-2">
                         <span className="text-xs font-semibold text-[#c41e3a] bg-[#c41e3a]/10 px-2 py-1 rounded">

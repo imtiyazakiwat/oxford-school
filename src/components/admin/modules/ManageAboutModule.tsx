@@ -19,12 +19,7 @@ const POSITION_LABELS = [
     { position: 4, label: "Bottom Right (Shorter)", defaultAlt: "Lab Session" },
 ];
 
-const FALLBACK_IMAGES = [
-    "/img/congactulations/congracts5.jpeg",
-    "/img/congactulations/congracts6.jpeg",
-    "/img/admissions/admission4.jpeg",
-    "/img/congactulations/congracts7.jpeg",
-];
+const FALLBACK_IMAGES = ["", "", "", ""];
 
 export default function ManageAboutModule() {
     const { user } = useAuth();

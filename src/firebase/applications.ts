@@ -58,14 +58,11 @@ export async function submitApplication(data: ApplicationData): Promise<{ data: 
 export async function getApplications(status?: string): Promise<{ data: Application[]; error: string | null }> {
   if (!isConfigured || !db) return { data: [], error: null };
   try {
-    let q;
-    if (status && status !== "all") {
-      q = query(collection(db, COLLECTION), where("status", "==", status), orderBy("created_at", "desc"));
-    } else {
-      q = query(collection(db, COLLECTION), orderBy("created_at", "desc"));
-    }
-    const snap = await getDocs(q);
-    return { data: snap.docs.map(d => docToApplication({ id: d.id, data: () => d.data() as Record<string, unknown> })), error: null };
+    const snap = await getDocs(collection(db, COLLECTION));
+    let data = snap.docs.map(d => docToApplication({ id: d.id, data: () => d.data() as Record<string, unknown> }));
+    if (status && status !== "all") data = data.filter(a => a.status === status);
+    data.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+    return { data, error: null };
   } catch (err) { return { data: [], error: err instanceof Error ? err.message : "Fetch failed" }; }
 }
 

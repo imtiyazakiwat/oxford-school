@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { X, ZoomIn, ZoomOut, ChevronLeft, ChevronRight, Maximize2, Download } from "lucide-react";
 import Link from "next/link";
-import { getAllGalleryImages, getGalleryImageUrl, getMockGalleryImage } from "@/firebase/gallery";
+import { getAllGalleryImages, getGalleryImageUrl } from "@/firebase/gallery";
 
 const ITEMS_PER_PAGE = 12;
 

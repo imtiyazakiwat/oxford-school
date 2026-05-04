@@ -4,50 +4,7 @@ import { useEffect, useState } from "react";
 import { motion } from "motion/react";
 import Link from "next/link";
 import { Trophy } from "lucide-react";
-import { getFeaturedAchievers, getAchieverImageUrl, getMockAchieverImage, Achiever } from "@/firebase/achievers";
-
-// Fallback data for when no achievers are in database
-const fallbackAchievers: Achiever[] = [
-  {
-    id: "1",
-    name: "Star Achiever",
-    stream: "Navodaya",
-    year: 2024,
-    percentage: "Selected",
-    rank: "JNV Bagalkot",
-    image_path: "",
-    is_featured: true,
-    display_order: 0,
-    created_at: "",
-    created_by: null,
-  },
-  {
-    id: "2",
-    name: "Star Achiever",
-    stream: "Sainik",
-    year: 2024,
-    percentage: "Selected",
-    rank: "Sainik School Vijayapur",
-    image_path: "",
-    is_featured: true,
-    display_order: 1,
-    created_at: "",
-    created_by: null,
-  },
-  {
-    id: "3",
-    name: "Star Achiever",
-    stream: "Adarsha",
-    year: 2024,
-    percentage: "Selected",
-    rank: "Adarsha Vidyalaya",
-    image_path: "",
-    is_featured: true,
-    display_order: 2,
-    created_at: "",
-    created_by: null,
-  },
-];
+import { getFeaturedAchievers, getAchieverImageUrl, Achiever } from "@/firebase/achievers";
 
 export default function Achievers() {
   const [achievers, setAchievers] = useState<Achiever[]>([]);
@@ -56,7 +13,7 @@ export default function Achievers() {
   useEffect(() => {
     const loadAchievers = async () => {
       const { data } = await getFeaturedAchievers();
-      setAchievers(data.length > 0 ? data : fallbackAchievers);
+      setAchievers(data);
       setLoading(false);
     };
     loadAchievers();
@@ -109,12 +66,6 @@ export default function Achievers() {
                     {achiever.image_path ? (
                       <img
                         src={getAchieverImageUrl(achiever.image_path, achiever.id)!}
-                        alt={achiever.name}
-                        className="w-full h-full object-cover rounded-full border-4 border-white shadow-lg"
-                      />
-                    ) : achiever.id.startsWith("mock-") ? (
-                      <img
-                        src={getMockAchieverImage(achiever.id)}
                         alt={achiever.name}
                         className="w-full h-full object-cover rounded-full border-4 border-white shadow-lg"
                       />

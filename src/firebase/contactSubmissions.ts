@@ -36,9 +36,11 @@ export async function getAllContactSubmissions(): Promise<{ data: ContactSubmiss
 export async function getContactSubmissionsByStatus(status: ContactSubmission["status"]): Promise<{ data: ContactSubmission[]; error: string | null }> {
   if (!isConfigured || !db) return { data: [], error: null };
   try {
-    const q = query(collection(db, COLLECTION), where("status", "==", status), orderBy("created_at", "desc"));
-    const snap = await getDocs(q);
-    return { data: snap.docs.map(d => docToContact({ id: d.id, data: () => d.data() as Record<string, unknown> })), error: null };
+    const snap = await getDocs(collection(db, COLLECTION));
+    const data = snap.docs.map(d => docToContact({ id: d.id, data: () => d.data() as Record<string, unknown> }))
+      .filter(c => c.status === status)
+      .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+    return { data, error: null };
   } catch (err) { return { data: [], error: err instanceof Error ? err.message : "Fetch failed" }; }
 }
 

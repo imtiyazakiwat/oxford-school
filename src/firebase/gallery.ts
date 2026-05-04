@@ -2,7 +2,6 @@ import { db, storage, isConfigured } from "./firebase";
 import { collection, doc, getDocs, getDoc, addDoc, updateDoc, deleteDoc, query, where, orderBy, limit, Timestamp } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage";
 import { compressImage, generateFileName } from "@/utils/imageUtils";
-import { MOCK_GALLERY, MOCK_GALLERY_IMAGES } from "@/data/mockData";
 import type { GalleryImage, GalleryImageInput } from "@/data/mockData";
 
 export type { GalleryImage, GalleryImageInput };
@@ -52,16 +51,14 @@ export async function uploadGalleryImage(file: File, userId: string): Promise<{ 
 }
 
 export function getGalleryImageUrl(imagePath: string, id?: string): string | null {
-  if (!imagePath) {
-    if (id) return getMockGalleryImage(id);
-    return null;
-  }
-  if (!isConfigured || !storage) return getMockGalleryImage(id || "");
+  if (!imagePath) return null;
+  if (imagePath.startsWith("/")) return imagePath;
+  if (!isConfigured || !storage) return null;
   return `https://firebasestorage.googleapis.com/v0/b/${process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET}/o/${encodeURIComponent(imagePath)}?alt=media`;
 }
 
 export function getMockGalleryImage(id: string): string {
-  return MOCK_GALLERY_IMAGES[id] || "/img/congactulations/congracts2.jpeg";
+  return "/img/congactulations/congracts2.jpeg";
 }
 
 export async function createGalleryImage(input: GalleryImageInput, imagePath: string, userId: string): Promise<{ data: GalleryImage | null; error: string | null }> {
@@ -77,36 +74,38 @@ export async function createGalleryImage(input: GalleryImageInput, imagePath: st
 
 export async function getAllGalleryImages(skipCache = false): Promise<{ data: GalleryImage[]; error: string | null }> {
   if (!skipCache) { const cached = getFromCache<GalleryImage[]>(CACHE_KEYS.ALL_GALLERY); if (cached) return { data: cached, error: null }; }
-  if (!isConfigured || !db) return { data: MOCK_GALLERY, error: null };
+  if (!isConfigured || !db) return { data: [], error: "Firebase not configured" };
   try {
-    const q = query(collection(db, COLLECTION), orderBy("created_at", "desc"));
-    const snap = await getDocs(q);
-    if (snap.empty) return { data: MOCK_GALLERY, error: null };
+    const snap = await getDocs(collection(db, COLLECTION));
     const data = snap.docs.map(d => docToGalleryImage({ id: d.id, data: () => d.data() as Record<string, unknown> }));
+    data.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
     saveToCache(CACHE_KEYS.ALL_GALLERY, data);
     return { data, error: null };
-  } catch { return { data: MOCK_GALLERY, error: null }; }
+  } catch (err) { return { data: [], error: err instanceof Error ? err.message : "Fetch failed" }; }
 }
 
 export async function getFeaturedGalleryImages(skipCache = false): Promise<{ data: GalleryImage[]; error: string | null }> {
   if (!skipCache) { const cached = getFromCache<GalleryImage[]>(CACHE_KEYS.FEATURED_GALLERY); if (cached) return { data: cached, error: null }; }
-  if (!isConfigured || !db) return { data: MOCK_GALLERY, error: null };
+  if (!isConfigured || !db) return { data: [], error: "Firebase not configured" };
   try {
-    const q = query(collection(db, COLLECTION), where("is_featured", "==", true), orderBy("display_order", "asc"), limit(6));
-    const snap = await getDocs(q);
-    if (snap.empty) return { data: MOCK_GALLERY, error: null };
-    const data = snap.docs.map(d => docToGalleryImage({ id: d.id, data: () => d.data() as Record<string, unknown> }));
+    const snap = await getDocs(collection(db, COLLECTION));
+    const data = snap.docs.map(d => docToGalleryImage({ id: d.id, data: () => d.data() as Record<string, unknown> }))
+      .filter(g => g.is_featured)
+      .sort((a, b) => a.display_order - b.display_order)
+      .slice(0, 6);
     saveToCache(CACHE_KEYS.FEATURED_GALLERY, data);
     return { data, error: null };
-  } catch { return { data: MOCK_GALLERY, error: null }; }
+  } catch (err) { return { data: [], error: err instanceof Error ? err.message : "Fetch failed" }; }
 }
 
 export async function getGalleryByCategory(category: string): Promise<{ data: GalleryImage[]; error: string | null }> {
-  if (!isConfigured || !db) return { data: MOCK_GALLERY.filter(g => g.category === category), error: null };
+  if (!isConfigured || !db) return { data: [], error: "Firebase not configured" };
   try {
-    const q = query(collection(db, COLLECTION), where("category", "==", category), orderBy("created_at", "desc"));
-    const snap = await getDocs(q);
-    return { data: snap.docs.map(d => docToGalleryImage({ id: d.id, data: () => d.data() as Record<string, unknown> })), error: null };
+    const snap = await getDocs(collection(db, COLLECTION));
+    const data = snap.docs.map(d => docToGalleryImage({ id: d.id, data: () => d.data() as Record<string, unknown> }))
+      .filter(g => g.category === category)
+      .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+    return { data, error: null };
   } catch { return { data: [], error: "Failed to fetch" }; }
 }
 
