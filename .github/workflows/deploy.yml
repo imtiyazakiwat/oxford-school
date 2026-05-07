@@ -27,7 +27,18 @@ jobs:
 
       - run: npx vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
 
-      - name: Make env vars available to Next.js
+      - name: Debug env file format
+        run: |
+          echo "=== File exists check ==="
+          ls -la .vercel/.env.production.local
+          echo "=== Number of lines ==="
+          wc -l .vercel/.env.production.local
+          echo "=== Var names only (no values) ==="
+          grep -oP '^[^=]+' .vercel/.env.production.local || cut -d'=' -f1 .vercel/.env.production.local
+          echo "=== Check if NEXT_PUBLIC vars present ==="
+          grep -c "NEXT_PUBLIC" .vercel/.env.production.local
+
+      - name: Copy env to root
         run: cp .vercel/.env.production.local .env.production.local
 
       - run: npx vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
