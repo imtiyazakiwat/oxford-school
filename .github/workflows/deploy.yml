@@ -27,11 +27,9 @@ jobs:
 
       - run: npx vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
 
-      - name: Load env vars into shell
-        run: |
-          set -a
-          source .vercel/.env.production.local
-          set +a
-          npx vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+      - name: Make env vars available to Next.js
+        run: cp .vercel/.env.production.local .env.production.local
+
+      - run: npx vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
 
       - run: npx vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
