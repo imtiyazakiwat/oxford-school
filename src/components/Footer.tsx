@@ -60,9 +60,7 @@ export default function Footer() {
               </div>
             </div>
             <p className="text-gray-400 text-xs sm:text-sm leading-relaxed mb-4 sm:mb-6">
-              One of the most trusted coaching institutions in North Karnataka
-              for Navodaya, Sainik School & Adarsha Vidyalaya entrance
-              preparation since 2023.
+              {t("footer.description")}
             </p>
             <div className="flex gap-2 sm:gap-3">
               {socialLinks.map((social) => (
@@ -99,7 +97,7 @@ export default function Footer() {
 
           {/* Programs */}
           <div>
-            <h4 className="font-bold text-sm sm:text-base md:text-lg mb-4 sm:mb-6">Our Programs</h4>
+            <h4 className="font-bold text-sm sm:text-base md:text-lg mb-4 sm:mb-6">{t("footer.programs")}</h4>
             <ul className="space-y-2 sm:space-y-3">
               {programs.map((program) => (
                 <li key={program}>
@@ -145,8 +143,8 @@ export default function Footer() {
               <li className="flex items-center gap-2 sm:gap-3">
                 <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-[#c41e3a] flex-shrink-0" />
                 <div className="text-gray-400 text-xs sm:text-sm">
-                  <p>Office: 24x7 (No Sunday Off)</p>
-                  <p>Need Help: 24x7 Support</p>
+                  <p>{t("footer.office")}</p>
+                  <p>{t("footer.needHelp")}</p>
                 </div>
               </li>
               <li className="flex items-center gap-2 sm:gap-3">
@@ -168,10 +166,10 @@ export default function Footer() {
             </p>
             <div className="flex flex-wrap justify-center gap-4 sm:gap-6">
               <a href="#" className="text-gray-500 hover:text-gray-300 text-xs sm:text-sm transition-colors">
-                Privacy Policy
+                {t("footer.privacy")}
               </a>
               <a href="#" className="text-gray-500 hover:text-gray-300 text-xs sm:text-sm transition-colors">
-                Terms of Service
+                {t("footer.terms")}
               </a>
             </div>
           </div>

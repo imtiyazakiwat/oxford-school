@@ -5,11 +5,14 @@ import { motion, AnimatePresence } from "motion/react";
 import { Calendar, ArrowRight, Newspaper, ChevronLeft, ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { getActiveNews, getNewsImageUrl, NewsItem } from "@/firebase/news";
+import { useLanguage } from "@/context/LanguageContext";
+import { useTranslatedText } from "@/hooks/useTranslatedText";
 
 const categories = ["All", "Events", "Academic", "Admissions", "Sports", "Achievements"];
 const ITEMS_PER_PAGE = 6;
 
 export default function NewsPage() {
+  const { t } = useLanguage();
   const [news, setNews] = useState<NewsItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeCategory, setActiveCategory] = useState("All");
@@ -58,9 +61,9 @@ export default function NewsPage() {
       {/* Header */}
       <div className="bg-[#c41e3a] py-16">
         <div className="max-w-7xl mx-auto px-4">
-          <Link href="/" className="text-white/80 hover:text-white mb-4 inline-block">← Back to Home</Link>
-          <h1 className="text-4xl md:text-5xl font-bold text-white" style={{ fontFamily: "var(--font-display)" }}>News & Events</h1>
-          <p className="text-white/80 mt-4 max-w-2xl">Stay updated with the latest news, events, and happenings at New Oxford Coaching Classes.</p>
+          <Link href="/" className="text-white/80 hover:text-white mb-4 inline-block">{t("page.backHome")}</Link>
+          <h1 className="text-4xl md:text-5xl font-bold text-white" style={{ fontFamily: "var(--font-display)" }}>{t("page.newsTitle")}</h1>
+          <p className="text-white/80 mt-4 max-w-2xl">{t("page.newsDesc")}</p>
         </div>
       </div>
 
@@ -95,7 +98,7 @@ export default function NewsPage() {
         ) : filteredNews.length === 0 ? (
           <div className="text-center py-16 text-gray-500">
             <Newspaper className="w-12 h-12 mx-auto mb-4 opacity-50" />
-            <p className="text-lg">{activeCategory === "All" ? "No news available yet." : `No news in ${activeCategory} category.`}</p>
+            <p className="text-lg">{activeCategory === "All" ? t("page.noNewsYet") : `${activeCategory} - ${t("page.noNewsYet")}`}</p>
           </div>
         ) : (
           <>

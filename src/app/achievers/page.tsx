@@ -5,6 +5,8 @@ import { motion, AnimatePresence } from "motion/react";
 import { Trophy, ArrowUpDown, Calendar, Award, ChevronLeft, ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { getAllAchievers, getAchieverImageUrl, Achiever } from "@/firebase/achievers";
+import { useLanguage } from "@/context/LanguageContext";
+import { useTranslatedText } from "@/hooks/useTranslatedText";
 
 const categories = ["All", "Navodaya", "Sainik", "Adarsha", "Morarji", "Kittur", "Others"];
 const ITEMS_PER_PAGE = 9;
@@ -38,6 +40,7 @@ export default function AchieversPage() {
     const [currentPage, setCurrentPage] = useState(1);
     const [direction, setDirection] = useState(0);
     const gridRef = useRef<HTMLDivElement>(null);
+    const { t } = useLanguage();
 
     useEffect(() => {
         const loadAchievers = async () => {
@@ -101,21 +104,9 @@ export default function AchieversPage() {
             {/* Header */}
             <div className="bg-[#c41e3a] py-16">
                 <div className="max-w-7xl mx-auto px-4">
-                    <Link
-                        href="/"
-                        className="text-white/80 hover:text-white mb-4 inline-block"
-                    >
-                        ← Back to Home
-                    </Link>
-                    <h1
-                        className="text-4xl md:text-5xl font-bold text-white"
-                        style={{ fontFamily: "var(--font-display)" }}
-                    >
-                        Our Star Achievers
-                    </h1>
-                    <p className="text-white/80 mt-4 max-w-2xl">
-                        Celebrating the outstanding achievements of our students across various competitive exams and academic streams.
-                    </p>
+                    <Link href="/" className="text-white/80 hover:text-white mb-4 inline-block">{t("page.backHome")}</Link>
+                    <h1 className="text-4xl md:text-5xl font-bold text-white" style={{ fontFamily: "var(--font-display)" }}>{t("page.achieversTitle")}</h1>
+                    <p className="text-white/80 mt-4 max-w-2xl">{t("page.achieversDesc")}</p>
                 </div>
             </div>
 
@@ -145,7 +136,7 @@ export default function AchieversPage() {
                 <div className="flex flex-wrap items-center justify-between gap-4 mb-8">
                     <div className="flex items-center gap-2 text-sm text-gray-600">
                         <Award className="w-4 h-4" />
-                        <span>{filteredAndSortedAchievers.length} achievers found</span>
+                        <span>{filteredAndSortedAchievers.length} {t("page.achieversFound")}</span>
                     </div>
                     
                     <div className="flex flex-wrap items-center gap-3">
@@ -159,7 +150,7 @@ export default function AchieversPage() {
                             >
                                 {yearOptions.map((year) => (
                                     <option key={year} value={year}>
-                                        {year === "All" ? "All Years" : year}
+                                        {year === "All" ? t("page.allYears") : year}
                                     </option>
                                 ))}
                             </select>
@@ -194,7 +185,7 @@ export default function AchieversPage() {
                         className="text-center mb-10"
                     >
                         <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2" style={{ fontFamily: "var(--font-display)" }}>
-                            {activeCategory === "All" ? "All Achievers" : `${activeCategory} Achievers`}
+                            {activeCategory === "All" ? t("page.allAchievers") : `${activeCategory} Achievers`}
                         </h2>
                         <p className="text-gray-600">{categoryDescriptions[activeCategory]}</p>
                     </motion.div>
@@ -312,7 +303,7 @@ export default function AchieversPage() {
                         )}
                         {totalPages > 1 && (
                             <p className="text-center text-sm text-gray-500 mt-3">
-                                Showing {(currentPage - 1) * ITEMS_PER_PAGE + 1}–{Math.min(currentPage * ITEMS_PER_PAGE, filteredAndSortedAchievers.length)} of {filteredAndSortedAchievers.length}
+                                {t("page.showing")} {(currentPage - 1) * ITEMS_PER_PAGE + 1}–{Math.min(currentPage * ITEMS_PER_PAGE, filteredAndSortedAchievers.length)} {t("page.of")} {filteredAndSortedAchievers.length}
                             </p>
                         )}
 
@@ -326,8 +317,8 @@ export default function AchieversPage() {
                                 <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-gray-100 flex items-center justify-center">
                                     <Trophy className="w-12 h-12 text-gray-400" />
                                 </div>
-                                <h3 className="text-xl font-semibold text-gray-700 mb-2">No achievers added yet</h3>
-                                <p className="text-gray-500">Achievers for this category will be added soon.</p>
+                                <h3 className="text-xl font-semibold text-gray-700 mb-2">{t("page.noAchievers")}</h3>
+                                <p className="text-gray-500">{t("page.noAchieversDesc")}</p>
                             </motion.div>
                         )}
                     </>
@@ -344,7 +335,7 @@ export default function AchieversPage() {
                     >
                         <div className="bg-white rounded-lg p-4 sm:p-6 text-center shadow-lg">
                             <p className="text-2xl sm:text-3xl font-bold text-[#c41e3a]">{achievers.length}</p>
-                            <p className="text-gray-600 text-sm mt-1">Total Achievers</p>
+                            <p className="text-gray-600 text-sm mt-1">{t("page.totalAchievers")}</p>
                         </div>
                         {Object.entries(streamCounts).slice(0, 3).map(([stream, count]) => (
                             <div
@@ -367,16 +358,16 @@ export default function AchieversPage() {
                     className="mt-16 bg-[#c41e3a] rounded-lg p-8 sm:p-12 text-center text-white"
                 >
                     <h3 className="text-2xl sm:text-3xl font-bold mb-4" style={{ fontFamily: "var(--font-display)" }}>
-                        Want to Join Our Success Stories?
+                        {t("page.joinSuccess")}
                     </h3>
                     <p className="text-white/80 mb-6 max-w-2xl mx-auto">
-                        Become a part of New Oxford Coaching Classes&apos; legacy of academic excellence. Our dedicated faculty and proven methodology help students achieve their dreams.
+                        {t("page.joinDesc")}
                     </p>
                     <Link
                         href="/#contact"
                         className="inline-block bg-white text-[#c41e3a] px-8 py-3 font-semibold hover:bg-gray-100 transition-colors"
                     >
-                        Contact Us Today
+                        {t("page.contactToday")}
                     </Link>
                 </motion.div>
             </div>

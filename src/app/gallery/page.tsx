@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { X, ZoomIn, ZoomOut, ChevronLeft, ChevronRight, Maximize2, Download } from "lucide-react";
 import Link from "next/link";
 import { getAllGalleryImages, getGalleryImageUrl } from "@/firebase/gallery";
+import { useLanguage } from "@/context/LanguageContext";
 
 const ITEMS_PER_PAGE = 12;
 
@@ -18,6 +19,7 @@ interface DisplayImage {
 const categories = ["All", "Achievements", "Events", "Admissions", "Press Coverage"];
 
 export default function GalleryPage() {
+  const { t } = useLanguage();
   const [activeCategory, setActiveCategory] = useState("All");
   const [images, setImages] = useState<DisplayImage[]>([]);
   const [loading, setLoading] = useState(true);
@@ -119,9 +121,9 @@ export default function GalleryPage() {
       {/* Header */}
       <div className="bg-[#c41e3a] py-16">
         <div className="max-w-7xl mx-auto px-4">
-          <Link href="/" className="text-white/80 hover:text-white mb-4 inline-block">← Back to Home</Link>
-          <h1 className="text-4xl md:text-5xl font-bold text-white" style={{ fontFamily: "var(--font-display)" }}>Photo Gallery</h1>
-          <p className="text-white/80 mt-4 max-w-2xl">Explore our achievements, events, admissions, and press coverage through our photo gallery.</p>
+          <Link href="/" className="text-white/80 hover:text-white mb-4 inline-block">{t("page.backHome")}</Link>
+          <h1 className="text-4xl md:text-5xl font-bold text-white" style={{ fontFamily: "var(--font-display)" }}>{t("page.galleryTitle")}</h1>
+          <p className="text-white/80 mt-4 max-w-2xl">{t("page.galleryDesc")}</p>
         </div>
       </div>
 
