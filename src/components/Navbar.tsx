@@ -5,16 +5,8 @@ import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "motion/react";
 import { Menu, X, User, LayoutDashboard, LogOut } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
+import { useLanguage } from "@/context/LanguageContext";
 import { getAdmissionBanner } from "@/firebase/admissionBanner";
-
-const navLinks = [
-  { name: "Home", href: "/#home" },
-  { name: "About", href: "/#about" },
-  { name: "Achievers", href: "/#achievers" },
-  { name: "Gallery", href: "/#gallery" },
-  { name: "News", href: "/#announcements" },
-  { name: "Contact", href: "/#contact" },
-];
 
 interface NavbarProps {
   onLoginSuccess?: () => void;
@@ -23,6 +15,7 @@ interface NavbarProps {
 export default function Navbar({ onLoginSuccess }: NavbarProps) {
   const router = useRouter();
   const { user, signOut, loading } = useAuth();
+  const { t, translateText, language } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
   const [showAuth, setShowAuth] = useState(false);
   const [authMode, setAuthMode] = useState<"signin" | "register">("signin");
@@ -32,11 +25,21 @@ export default function Navbar({ onLoginSuccess }: NavbarProps) {
   
   // Admission banner state
   const [bannerText, setBannerText] = useState("Admissions Open for 2026-27 — Navodaya, Sainik School & Adarsha Vidyalaya Coaching — Limited Seats!");
+  const [translatedBanner, setTranslatedBanner] = useState("");
   const [bannerEmoji, setBannerEmoji] = useState("🎓");
   const [showBanner, setShowBanner] = useState(true);
 
   const isLoggedIn = !!user;
   const userName = user?.displayName || user?.email?.split("@")[0] || "User";
+
+  const navLinks = [
+    { name: t("nav.home"), href: "/#home" },
+    { name: t("nav.about"), href: "/#about" },
+    { name: t("nav.achievers"), href: "/#achievers" },
+    { name: t("nav.gallery"), href: "/#gallery" },
+    { name: t("nav.news"), href: "/#announcements" },
+    { name: t("nav.contact"), href: "/#contact" },
+  ];
 
   useEffect(() => {
     const handleScroll = () => {
@@ -57,6 +60,13 @@ export default function Navbar({ onLoginSuccess }: NavbarProps) {
     };
     fetchBanner();
   }, []);
+
+  // Translate banner text when language changes
+  useEffect(() => {
+    if (language === "kn" && bannerText) {
+      translateText(bannerText).then(setTranslatedBanner);
+    }
+  }, [language, bannerText, translateText]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -102,8 +112,6 @@ export default function Navbar({ onLoginSuccess }: NavbarProps) {
         e.preventDefault();
         setIsOpen(false);
         
-        // Use a small timeout to allow the menu closure animation to start/complete 
-        // or at least not interfere with the calculation
         setTimeout(() => {
           const element = document.getElementById(id);
           if (element) {
@@ -118,13 +126,14 @@ export default function Navbar({ onLoginSuccess }: NavbarProps) {
           }
         }, 10);
       } else {
-        // If on another page, menu will close via setIsOpen(false) in the default link behavior
         setIsOpen(false);
       }
     } else {
       setIsOpen(false);
     }
   };
+
+  const displayBanner = language === "kn" && translatedBanner ? translatedBanner : bannerText;
 
   return (
     <>
@@ -133,9 +142,9 @@ export default function Navbar({ onLoginSuccess }: NavbarProps) {
           <div className="max-w-7xl mx-auto px-4">
             <div className="animate-marquee whitespace-nowrap">
               <span className="inline-block">
-                {bannerEmoji} {bannerText} {bannerEmoji} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                {bannerEmoji} {bannerText} {bannerEmoji} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                {bannerEmoji} {bannerText} {bannerEmoji}
+                {bannerEmoji} {displayBanner} {bannerEmoji} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                {bannerEmoji} {displayBanner} {bannerEmoji} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                {bannerEmoji} {displayBanner} {bannerEmoji}
               </span>
             </div>
           </div>
@@ -151,16 +160,16 @@ export default function Navbar({ onLoginSuccess }: NavbarProps) {
               <img src="/img/logo.png" alt="New Oxford Coaching Classes" className="w-14 h-14 object-contain rounded-full" />
               <div>
                 <h1 className="text-xl font-bold text-[#c41e3a]" style={{ fontFamily: "var(--font-display)" }}>
-                  New Oxford Coaching Classes
+                  {t("brandName")}
                 </h1>
-                <p className="text-xs text-gray-500 -mt-1">Jamkhandi & Athani</p>
+                <p className="text-xs text-gray-500 -mt-1">{t("brandSubtitle")}</p>
               </div>
             </a>
 
             <div className="hidden lg:flex items-center gap-1">
               {navLinks.map((link) => (
                 <a
-                  key={link.name}
+                  key={link.href}
                   href={link.href}
                   onClick={(e) => handleNavLinkClick(e, link.href)}
                   className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-[#c41e3a] transition-colors relative group"
@@ -197,15 +206,15 @@ export default function Navbar({ onLoginSuccess }: NavbarProps) {
                       >
                         <a href="/student" className="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 hover:text-[#c41e3a] transition-colors">
                           <LayoutDashboard className="w-4 h-4" />
-                          Dashboard
+                          {t("nav.dashboard")}
                         </a>
                         <a href="/student" className="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 hover:text-[#c41e3a] transition-colors">
                           <User className="w-4 h-4" />
-                          Profile
+                          {t("nav.profile")}
                         </a>
                         <button onClick={handleLogout} className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 hover:text-[#c41e3a] transition-colors">
                           <LogOut className="w-4 h-4" />
-                          Log Out
+                          {t("nav.logout")}
                         </button>
                       </motion.div>
                     )}
@@ -240,15 +249,15 @@ export default function Navbar({ onLoginSuccess }: NavbarProps) {
                         </div>
                         <a href="/student" className="flex items-center gap-2 px-3 py-2 text-sm text-gray-700 hover:bg-gray-50">
                           <LayoutDashboard className="w-4 h-4" />
-                          Dashboard
+                          {t("nav.dashboard")}
                         </a>
                         <a href="/student" className="flex items-center gap-2 px-3 py-2 text-sm text-gray-700 hover:bg-gray-50">
                           <User className="w-4 h-4" />
-                          Profile
+                          {t("nav.profile")}
                         </a>
                         <button onClick={handleLogout} className="w-full flex items-center gap-2 px-3 py-2 text-sm text-gray-700 hover:bg-gray-50">
                           <LogOut className="w-4 h-4" />
-                          Log Out
+                          {t("nav.logout")}
                         </button>
                       </motion.div>
                     )}
@@ -272,7 +281,7 @@ export default function Navbar({ onLoginSuccess }: NavbarProps) {
                 <div className="py-4 space-y-1">
                   {navLinks.map((link) => (
                     <a
-                      key={link.name}
+                      key={link.href}
                       href={link.href}
                       className="block px-4 py-3 text-gray-700 hover:text-[#c41e3a] hover:bg-gray-50"
                       onClick={(e) => handleNavLinkClick(e, link.href)}

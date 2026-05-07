@@ -35,3 +35,4 @@ next-env.d.ts
 
 # lock files (keep only package-lock.json)
 bun.lock
+env.txt

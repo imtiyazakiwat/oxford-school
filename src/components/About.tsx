@@ -3,34 +3,8 @@
 import { useState, useEffect } from "react";
 import { motion } from "motion/react";
 import { Trophy, Users, Award, Target } from "lucide-react";
-import { getAboutImages, getAboutImageUrl, AboutImage } from "@/firebase/aboutImages";
-
-const features = [
-  {
-    icon: Trophy,
-    title: "Competitive Exam Training",
-    description:
-      "Expert coaching for Navodaya, Sainik School, Adarsha Vidyalaya, Kittur, Murarji & R.M.S. entrance exams.",
-  },
-  {
-    icon: Users,
-    title: "Experienced Faculty",
-    description:
-      "Learn from dedicated educators with proven track records in competitive exam preparation.",
-  },
-  {
-    icon: Award,
-    title: "Outstanding Results",
-    description:
-      "64 out of 68 selections in 2025–26. Top achievement: 258/300 marks in Sainik School entrance exam.",
-  },
-  {
-    icon: Target,
-    title: "Holistic Development",
-    description:
-      "Yoga, meditation, karate & Surya Namaskar for fitness, concentration, and inner strength.",
-  },
-];
+import { getAboutImages, getAboutImageUrl } from "@/firebase/aboutImages";
+import { useLanguage } from "@/context/LanguageContext";
 
 const FALLBACK_IMAGES = [
   { position: 1, src: "", alt: "Student Felicitation" },
@@ -40,6 +14,7 @@ const FALLBACK_IMAGES = [
 ];
 
 export default function About() {
+  const { t } = useLanguage();
   const [images, setImages] = useState<{ position: number; src: string; alt: string }[]>(FALLBACK_IMAGES);
 
   useEffect(() => {
@@ -57,6 +32,13 @@ export default function About() {
     loadImages();
   }, []);
 
+  const features = [
+    { icon: Trophy, title: t("about.feature1Title"), description: t("about.feature1Desc") },
+    { icon: Users, title: t("about.feature2Title"), description: t("about.feature2Desc") },
+    { icon: Award, title: t("about.feature3Title"), description: t("about.feature3Desc") },
+    { icon: Target, title: t("about.feature4Title"), description: t("about.feature4Desc") },
+  ];
+
   const getImage = (position: number) => images.find(img => img.position === position) || FALLBACK_IMAGES[position - 1];
 
   const AboutImg = ({ position, className }: { position: number; className: string }) => {
@@ -69,50 +51,37 @@ export default function About() {
     <section id="about" className="py-12 sm:py-16 md:py-20 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
-          {/* Left Content */}
           <motion.div
             initial={{ opacity: 0, x: -40 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
           >
             <p className="text-[#c41e3a] font-semibold mb-2 tracking-wide text-xs sm:text-sm">
-              ABOUT US
+              {t("about.tag")}
             </p>
             <h2
               className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-4 sm:mb-6"
               style={{ fontFamily: "var(--font-display)" }}
             >
-              Building futures through{" "}
-              <span className="text-[#c41e3a]">excellence.</span>
+              {t("about.title")}{" "}
+              <span className="text-[#c41e3a]">{t("about.titleHighlight")}</span>
             </h2>
             <p className="text-gray-600 mb-4 sm:mb-6 leading-relaxed text-sm sm:text-base">
-              New Oxford Coaching Classes stands today as one of the most trusted
-              and result-oriented educational institutions for students across
-              North Karnataka. Built on the strong foundation of discipline,
-              dedication, and academic excellence, the institution has become a
-              preferred choice for thousands of parents seeking a brighter future
-              for their children.
+              {t("about.p1")}
             </p>
             <p className="text-gray-600 mb-6 sm:mb-8 leading-relaxed text-sm sm:text-base">
-              The journey began in 2023 under the visionary leadership of
-              Mr. Vijaykumar Kumathalli and journalist Mr. Jagadeesh Khobri.
-              What started with just 38 students has grown into a remarkable
-              institution with branches in Jamkhandi and Athani, delivering
-              exceptional results in Navodaya, Sainik School, and Adarsha
-              Vidyalaya entrance examinations year after year.
+              {t("about.p2")}
             </p>
-
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
               <a href="#contact" className="btn-primary text-center text-sm sm:text-base">
-                Learn More
+                {t("about.learnMore")}
               </a>
               <a href="#virtual-tour" className="btn-secondary text-center text-sm sm:text-base">
-                Virtual Tour
+                {t("about.virtualTour")}
               </a>
             </div>
           </motion.div>
 
-          {/* Right Image Grid */}
           <motion.div
             initial={{ opacity: 0, x: 40 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -129,18 +98,15 @@ export default function About() {
                 <AboutImg position={4} className="w-full h-32 sm:h-40 md:h-48 object-cover rounded-lg" />
               </div>
             </div>
-            {/* Accent */}
             <div className="absolute -bottom-2 sm:-bottom-4 -left-2 sm:-left-4 w-16 sm:w-20 md:w-24 h-16 sm:h-20 md:h-24 bg-[#f7c52d] rounded-lg -z-10" />
             <div className="absolute -top-2 sm:-top-4 -right-2 sm:-right-4 w-16 sm:w-20 md:w-24 h-16 sm:h-20 md:h-24 bg-[#c41e3a] rounded-lg -z-10" />
           </motion.div>
         </div>
 
-
-        {/* Features Grid */}
         <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 md:gap-8 mt-12 sm:mt-16 md:mt-20">
           {features.map((feature, index) => (
             <motion.div
-              key={feature.title}
+              key={index}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}

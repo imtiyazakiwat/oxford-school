@@ -8,25 +8,7 @@ import {
   Mail,
   Clock,
 } from "lucide-react";
-
-const quickLinks = [
-  { name: "Home", href: "#home" },
-  { name: "About Us", href: "#about" },
-  { name: "Achievers", href: "#achievers" },
-  { name: "Gallery", href: "#gallery" },
-  { name: "News", href: "#announcements" },
-  { name: "Contact", href: "#contact" },
-];
-
-const programs = [
-  "Navodaya Entrance",
-  "Sainik School Entrance",
-  "Adarsha Vidyalaya",
-  "Kittur School",
-  "Murarji School",
-  "R.M.S. Entrance",
-  "Summer Coaching Camp",
-];
+import { useLanguage } from "@/context/LanguageContext";
 
 const socialLinks = [
   { icon: Facebook, href: "https://www.facebook.com/share/1AijxSbpZd/", label: "Facebook" },
@@ -34,9 +16,29 @@ const socialLinks = [
 ];
 
 export default function Footer() {
+  const { t } = useLanguage();
+
+  const quickLinks = [
+    { name: t("nav.home"), href: "#home" },
+    { name: t("nav.about"), href: "#about" },
+    { name: t("nav.achievers"), href: "#achievers" },
+    { name: t("nav.gallery"), href: "#gallery" },
+    { name: t("nav.news"), href: "#announcements" },
+    { name: t("nav.contact"), href: "#contact" },
+  ];
+
+  const programs = [
+    "Navodaya Entrance",
+    "Sainik School Entrance",
+    "Adarsha Vidyalaya",
+    "Kittur School",
+    "Murarji School",
+    "R.M.S. Entrance",
+    "Summer Coaching Camp",
+  ];
+
   return (
     <footer className="bg-gray-900 text-white">
-      {/* Main Footer */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10 sm:py-12 md:py-16">
         <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10">
           {/* Brand */}
@@ -52,9 +54,9 @@ export default function Footer() {
                   className="text-lg sm:text-xl font-bold"
                   style={{ fontFamily: "var(--font-display)" }}
                 >
-                  New Oxford Coaching
+                  {t("brandName")}
                 </h4>
-                <p className="text-xs text-gray-400">Jamkhandi & Athani</p>
+                <p className="text-xs text-gray-400">{t("brandSubtitle")}</p>
               </div>
             </div>
             <p className="text-gray-400 text-xs sm:text-sm leading-relaxed mb-4 sm:mb-6">
@@ -62,7 +64,6 @@ export default function Footer() {
               for Navodaya, Sainik School & Adarsha Vidyalaya entrance
               preparation since 2023.
             </p>
-            {/* Social Links */}
             <div className="flex gap-2 sm:gap-3">
               {socialLinks.map((social) => (
                 <a
@@ -81,10 +82,10 @@ export default function Footer() {
 
           {/* Quick Links */}
           <div>
-            <h4 className="font-bold text-sm sm:text-base md:text-lg mb-4 sm:mb-6">Quick Links</h4>
+            <h4 className="font-bold text-sm sm:text-base md:text-lg mb-4 sm:mb-6">{t("footer.quickLinks")}</h4>
             <ul className="space-y-2 sm:space-y-3">
               {quickLinks.map((link) => (
-                <li key={link.name}>
+                <li key={link.href}>
                   <a
                     href={link.href}
                     className="text-gray-400 hover:text-[#f7c52d] transition-colors text-xs sm:text-sm"
@@ -102,11 +103,7 @@ export default function Footer() {
             <ul className="space-y-2 sm:space-y-3">
               {programs.map((program) => (
                 <li key={program}>
-                  <span
-                    className="text-gray-400 text-xs sm:text-sm"
-                  >
-                    {program}
-                  </span>
+                  <span className="text-gray-400 text-xs sm:text-sm">{program}</span>
                 </li>
               ))}
             </ul>
@@ -114,12 +111,12 @@ export default function Footer() {
 
           {/* Contact Info */}
           <div className="col-span-2 md:col-span-1">
-            <h4 className="font-bold text-sm sm:text-base md:text-lg mb-4 sm:mb-6">Contact Info</h4>
+            <h4 className="font-bold text-sm sm:text-base md:text-lg mb-4 sm:mb-6">{t("footer.contactInfo")}</h4>
             <ul className="space-y-3 sm:space-y-4">
               <li className="flex items-start gap-2 sm:gap-3">
                 <MapPin className="w-4 h-4 sm:w-5 sm:h-5 text-[#c41e3a] flex-shrink-0 mt-0.5" />
                 <div>
-                  <span className="text-gray-400 text-xs sm:text-sm font-medium text-white">Jamkhandi:</span>
+                  <span className="text-gray-400 text-xs sm:text-sm font-medium text-white">{t("footer.jamakhandi")}:</span>
                   <span className="text-gray-400 text-xs sm:text-sm block">
                     Alguoor RC, Near Helipad,
                     <br />
@@ -130,7 +127,7 @@ export default function Footer() {
               <li className="flex items-start gap-2 sm:gap-3">
                 <MapPin className="w-4 h-4 sm:w-5 sm:h-5 text-[#c41e3a] flex-shrink-0 mt-0.5" />
                 <div>
-                  <span className="text-gray-400 text-xs sm:text-sm font-medium text-white">Athani:</span>
+                  <span className="text-gray-400 text-xs sm:text-sm font-medium text-white">{t("footer.athani")}:</span>
                   <span className="text-gray-400 text-xs sm:text-sm block">
                     HUDKO Colony, IB Road,
                     <br />
@@ -141,8 +138,8 @@ export default function Footer() {
               <li className="flex items-center gap-2 sm:gap-3">
                 <Phone className="w-4 h-4 sm:w-5 sm:h-5 text-[#c41e3a] flex-shrink-0" />
                 <div className="text-gray-400 text-xs sm:text-sm">
-                  <p>JKD: +91 9590483488</p>
-                  <p>Athani: +91 9740412339</p>
+                  <p>{t("footer.jamakhandi")}: +91 9590483488</p>
+                  <p>{t("footer.athani")}: +91 9740412339</p>
                 </div>
               </li>
               <li className="flex items-center gap-2 sm:gap-3">
@@ -163,24 +160,17 @@ export default function Footer() {
         </div>
       </div>
 
-      {/* Bottom Bar */}
       <div className="border-t border-gray-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-6">
           <div className="flex flex-col md:flex-row items-center justify-between gap-3 sm:gap-4">
             <p className="text-gray-500 text-xs sm:text-sm text-center md:text-left">
-              © {new Date().getFullYear()} New Oxford Coaching Classes. All rights reserved.
+              © {new Date().getFullYear()} {t("brandName")}. {t("footer.rights")}
             </p>
             <div className="flex flex-wrap justify-center gap-4 sm:gap-6">
-              <a
-                href="#"
-                className="text-gray-500 hover:text-gray-300 text-xs sm:text-sm transition-colors"
-              >
+              <a href="#" className="text-gray-500 hover:text-gray-300 text-xs sm:text-sm transition-colors">
                 Privacy Policy
               </a>
-              <a
-                href="#"
-                className="text-gray-500 hover:text-gray-300 text-xs sm:text-sm transition-colors"
-              >
+              <a href="#" className="text-gray-500 hover:text-gray-300 text-xs sm:text-sm transition-colors">
                 Terms of Service
               </a>
             </div>

@@ -96,7 +96,7 @@ export function middleware(request: NextRequest) {
     "connect-src 'self' https://*.firebaseio.com https://*.googleapis.com wss://*.firebaseio.com https://vercel.live https://vercel.com https://vitals.vercel-insights.com https://frontend-cdn.perplexity.ai",
 
     // Frames: YouTube, Google, Vercel
-    "frame-src 'self' https://www.youtube.com https://www.google.com https://vercel.live https://vercel.com",
+    "frame-src 'self' https://www.youtube.com https://www.google.com https://vercel.live https://vercel.com https://*.firebaseapp.com",
 
     // Prevent this site from being embedded
     "frame-ancestors 'none'",

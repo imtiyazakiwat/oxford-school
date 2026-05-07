@@ -2,20 +2,27 @@
 
 import { motion } from "motion/react";
 import { ChevronRight } from "lucide-react";
+import { useLanguage } from "@/context/LanguageContext";
 
 interface HeroProps {
   onExamRegisterClick?: () => void;
 }
 
 export default function Hero({ onExamRegisterClick }: HeroProps) {
+  const { t } = useLanguage();
+
+  const stats = [
+    { value: t("hero.stat1Value"), label: t("hero.stat1Label") },
+    { value: t("hero.stat2Value"), label: t("hero.stat2Label") },
+    { value: t("hero.stat3Value"), label: t("hero.stat3Label") },
+    { value: t("hero.stat4Value"), label: t("hero.stat4Label") },
+  ];
+
   return (
     <section id="home" className="relative min-h-[100vh] md:min-h-[85vh]">
-      {/* Background Image */}
       <div
         className="absolute inset-0 bg-cover bg-center"
-        style={{
-          backgroundImage: "url('/img/hero-bg.jpeg')",
-        }}
+        style={{ backgroundImage: "url('/img/hero-bg.jpeg')" }}
       >
         <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-black/30" />
       </div>
@@ -29,9 +36,9 @@ export default function Hero({ onExamRegisterClick }: HeroProps) {
             className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 sm:mb-6 leading-tight"
             style={{ fontFamily: "var(--font-display)" }}
           >
-            Devotion towards
+            {t("hero.title1")}
             <br />
-            Dedication &amp; Determination
+            {t("hero.title2")}
           </motion.h1>
 
           <motion.p
@@ -40,9 +47,7 @@ export default function Hero({ onExamRegisterClick }: HeroProps) {
             transition={{ delay: 0.2 }}
             className="text-white/90 text-base sm:text-lg mb-6 sm:mb-8 leading-relaxed max-w-xl"
           >
-            Preparing students for Navodaya, Sainik School, Adarsha Vidyalaya
-            & other competitive entrance exams. Building future leaders through
-            discipline, dedication & academic excellence.
+            {t("hero.description")}
           </motion.p>
 
           <motion.div
@@ -55,31 +60,25 @@ export default function Hero({ onExamRegisterClick }: HeroProps) {
               onClick={onExamRegisterClick}
               className="bg-white text-[#c41e3a] px-6 sm:px-8 py-3 sm:py-4 font-semibold hover:bg-gray-100 transition-colors inline-flex items-center justify-center gap-2 text-sm sm:text-base"
             >
-              Register for Exam
+              {t("hero.registerBtn")}
               <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
             </button>
             <a
               href="#contact"
               className="border-2 border-white text-white px-6 sm:px-8 py-3 sm:py-4 font-semibold hover:bg-white hover:text-[#c41e3a] transition-colors text-center text-sm sm:text-base"
             >
-              Contact Us
+              {t("hero.contactBtn")}
             </a>
           </motion.div>
         </div>
       </div>
 
-      {/* Stats Bar */}
       <div className="absolute bottom-0 left-0 right-0 bg-white/95 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-6">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-8">
-            {[
-              { value: "4+", label: "Years of Excellence" },
-              { value: "450+", label: "Students Trained" },
-              { value: "95%", label: "Selection Rate" },
-              { value: "258/300", label: "Sainik School Marks" },
-            ].map((stat, index) => (
+            {stats.map((stat, index) => (
               <motion.div
-                key={stat.label}
+                key={index}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4 + index * 0.1 }}
