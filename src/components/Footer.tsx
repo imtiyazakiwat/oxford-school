@@ -28,13 +28,13 @@ export default function Footer() {
   ];
 
   const programs = [
-    "Navodaya Entrance",
-    "Sainik School Entrance",
-    "Adarsha Vidyalaya",
-    "Kittur School",
-    "Murarji School",
-    "R.M.S. Entrance",
-    "Summer Coaching Camp",
+    t("footer.navodayaEntrance"),
+    t("footer.sainikEntrance"),
+    t("footer.adarshaVidyalaya"),
+    t("footer.kitturSchool"),
+    t("footer.murarjiSchool"),
+    t("footer.rmsEntrance"),
+    t("footer.summerCamp"),
   ];
 
   return (

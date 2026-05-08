@@ -11,6 +11,11 @@ import { useTranslatedText } from "@/hooks/useTranslatedText";
 const categories = ["All", "Navodaya", "Sainik", "Adarsha", "Morarji", "Kittur", "Others"];
 const ITEMS_PER_PAGE = 9;
 
+function AchieverRank({ rank }: { rank: string }) {
+  const translated = useTranslatedText(rank);
+  return <p className="text-gray-600 font-medium text-sm sm:text-base">{translated}</p>;
+}
+
 const categoryDescriptions: { [key: string]: string } = {
     All: "",
     Navodaya: "Jawahar Navodaya Vidyalaya Selection Achievers",
@@ -258,9 +263,7 @@ export default function AchieversPage() {
                                                     {achiever.percentage}
                                                 </p>
                                                 {achiever.rank && (
-                                                    <p className="text-gray-600 font-medium text-sm sm:text-base">
-                                                        {achiever.rank}
-                                                    </p>
+                                                    <AchieverRank rank={achiever.rank} />
                                                 )}
                                             </div>
                                         </div>
