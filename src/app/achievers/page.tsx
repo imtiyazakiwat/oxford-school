@@ -16,25 +16,7 @@ function AchieverRank({ rank }: { rank: string }) {
   return <p className="text-gray-600 font-medium text-sm sm:text-base">{translated}</p>;
 }
 
-const categoryDescriptions: { [key: string]: string } = {
-    All: "",
-    Navodaya: "Jawahar Navodaya Vidyalaya Selection Achievers",
-    Sainik: "Sainik School Entrance Exam Achievers",
-    Adarsha: "Adarsha Vidyalaya Selection Achievers",
-    Morarji: "Morarji Desai Residential School Selections",
-    Kittur: "Kittur Rani Channamma Residential School Selections",
-    Others: "Other Competitive Exam Achievers",
-};
-
 type SortOption = "newest" | "oldest";
-
-const sortOptions: { value: SortOption; label: string }[] = [
-    { value: "newest", label: "Newest First" },
-    { value: "oldest", label: "Oldest First" },
-];
-
-// Year filter options (2019-2025)
-const yearOptions = ["All", "2025", "2024", "2023", "2022", "2021", "2020", "2019"];
 
 export default function AchieversPage() {
     const [activeCategory, setActiveCategory] = useState("All");
@@ -46,6 +28,18 @@ export default function AchieversPage() {
     const [direction, setDirection] = useState(0);
     const gridRef = useRef<HTMLDivElement>(null);
     const { t } = useLanguage();
+
+    const yearOptions = ["All", "2025", "2024", "2023", "2022", "2021", "2020", "2019"];
+
+    const categoryLabels: { [key: string]: string } = {
+        All: t("page.catAll"), Navodaya: t("page.catNavodaya"), Sainik: t("page.catSainik"),
+        Adarsha: t("page.catAdarsha"), Morarji: t("page.catMorarji"), Kittur: t("page.catKittur"), Others: t("page.catOthers"),
+    };
+
+    const translatedCategoryDescriptions: { [key: string]: string } = {
+        All: "", Navodaya: t("page.catNavodayaDesc"), Sainik: t("page.catSainikDesc"),
+        Adarsha: t("page.catAdarshaDesc"), Morarji: t("page.catMorarjiDesc"), Kittur: t("page.catKitturDesc"), Others: t("page.catOthersDesc"),
+    };
 
     useEffect(() => {
         const loadAchievers = async () => {
@@ -127,7 +121,7 @@ export default function AchieversPage() {
                                     : "bg-white text-gray-700 hover:bg-gray-100 border border-gray-200"
                                 }`}
                         >
-                            {category}
+                            {categoryLabels[category] || category}
                             {category !== "All" && streamCounts[category] && (
                                 <span className="ml-2 text-xs bg-white/20 px-2 py-0.5 rounded-full">
                                     {streamCounts[category]}
@@ -169,11 +163,8 @@ export default function AchieversPage() {
                                 onChange={(e) => setSortBy(e.target.value as SortOption)}
                                 className="px-3 py-2 bg-white border border-gray-200 rounded-lg text-sm font-medium text-gray-700 focus:outline-none focus:border-[#c41e3a]"
                             >
-                                {sortOptions.map((option) => (
-                                    <option key={option.value} value={option.value}>
-                                        {option.label}
-                                    </option>
-                                ))}
+                                <option value="newest">{t("page.newestFirst")}</option>
+                                <option value="oldest">{t("page.oldestFirst")}</option>
                             </select>
                         </div>
                     </div>
@@ -190,9 +181,9 @@ export default function AchieversPage() {
                         className="text-center mb-10"
                     >
                         <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2" style={{ fontFamily: "var(--font-display)" }}>
-                            {activeCategory === "All" ? t("page.allAchievers") : `${activeCategory} Achievers`}
+                            {activeCategory === "All" ? t("page.allAchievers") : `${categoryLabels[activeCategory]} ${t("page.achieversSuffix")}`}
                         </h2>
-                        <p className="text-gray-600">{categoryDescriptions[activeCategory]}</p>
+                        <p className="text-gray-600">{translatedCategoryDescriptions[activeCategory]}</p>
                     </motion.div>
                 </AnimatePresence>
 
@@ -346,7 +337,7 @@ export default function AchieversPage() {
                                 className="bg-white rounded-lg p-4 sm:p-6 text-center shadow-lg"
                             >
                                 <p className="text-2xl sm:text-3xl font-bold text-[#c41e3a]">{count}</p>
-                                <p className="text-gray-600 text-sm mt-1">{stream} Achievers</p>
+                                <p className="text-gray-600 text-sm mt-1">{categoryLabels[stream] || stream} {t("page.achieversSuffix")}</p>
                             </div>
                         ))}
                     </motion.div>
